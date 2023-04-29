@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col hidden-print">
+            {% include 'admin/sidebar.html' %}
+        </div>
+        <!-- top navigation -->
+        {% include 'admin/header.html' %}
+        <!-- /top navigation -->
+        <!-- /header content -->
+        
+<!-- page content -->
+{% include 'admin/content.html' %}
+<!-- /page content -->
+
+        <!-- footer content -->
+        <footer class="hidden-print">
+            <div class="pull-left">
+                Gentelella - قالب پنل مدیریت بوت استرپ 
+                <a href="https://colorlib.com">Colorlib</a> | توسعه توسط <a href="#">مصطفی قربانی</a>
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+    </div>
+</div>
+
+{% endblock %}
