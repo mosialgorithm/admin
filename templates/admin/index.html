@@ -1,31 +1,27 @@
 {% extends 'base.html' %}
 
+{% block title %}  صفحه ادمین سایت {% endblock %}
+
 {% block content %}
-
-<div class="container body">
-    <div class="main_container">
-        <div class="col-md-3 left_col hidden-print">
-            {% include 'admin/sidebar.html' %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="offset-md-4 col-md-4">
+          {% include 'flash.html' %}
         </div>
-        <!-- top navigation -->
-        {% include 'admin/header.html' %}
-        <!-- /top navigation -->
-        <!-- /header content -->
-        
-<!-- page content -->
-{% include 'admin/content.html' %}
-<!-- /page content -->
-
-        <!-- footer content -->
-        <footer class="hidden-print">
-            <div class="pull-left">
-                Gentelella - قالب پنل مدیریت بوت استرپ 
-                <a href="https://colorlib.com">Colorlib</a> | توسعه توسط <a href="#">مصطفی قربانی</a>
-            </div>
-            <div class="clearfix"></div>
-        </footer>
-        <!-- /footer content -->
-    </div>
-</div>
-
+      </div>
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        {% block small_boxes %}{% endblock %}
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          {% block main_content %}{% endblock %}
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
 {% endblock %}

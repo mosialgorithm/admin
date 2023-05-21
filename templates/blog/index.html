@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}  صفحه ادمین سایت {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="offset-md-4 col-md-4">
+          {% include 'flash.html' %}
+        </div>
+      </div>
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        {% block small_boxes %}
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-12">
+              <div class="info-box">
+                  <span class="info-box-icon bg-info"><i class="fa fa-users"></i></span>
+      
+                  <div class="info-box-content">
+                      <span class="info-box-text"> کل خبرها </span>
+                      <span class="info-box-number"> {{all_news|count}} </span>
+                  </div>
+                  <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+              <div class="info-box">
+                  <span class="info-box-icon bg-success"><i class="fa fa-user"></i></span>
+      
+                  <div class="info-box-content">
+                      <span class="info-box-text">   کاربر با بیشترین خبر</span>
+                      <span class="info-box-number">{{user_most_news}}</span>
+                  </div>
+                  <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+              <div class="info-box">
+                  <span class="info-box-icon bg-warning"><i class="fa fa-smile-o"></i></span>
+      
+                  <div class="info-box-content">
+                      <span class="info-box-text"> پربازدیدترین خبر</span>
+                      <span class="info-box-number"> {{news_most_seen[0].title}}</span>
+                  </div>
+                  <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+              <div class="info-box">
+                  <span class="info-box-icon bg-primary"><i class="fa fa-hand-peace-o"></i></span>
+      
+                  <div class="info-box-content">
+                      <span class="info-box-text">کاربران فعال</span>
+                      <span class="info-box-number"><small>نفر</small></span>
+                  </div>
+                  <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+      
+      </div>
+        {% endblock %}
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          {% block main_content %}
+          <div class="col-md-4">
+            <!-- USERS LIST -->
+            <div class="card card-info">
+                <div class="card-header">
+                    <h3 class="card-title">آخرین خبرها</h3>
+          
+                    <div class="card-tools">
+                        <!-- <span class="badge badge-danger">۸ پیام جدید</span> -->
+                        <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <ul class="users-list clearfix">
+                        {% for news in all_news %}
+                        <li>
+                            <img src="{{url_for('static', filename=news.image)}}" width="128" height="128" class="round"  alt="User Image">
+                            <a class="users-list-name mt-2" href="#"> {{news.title}}</a>
+                            
+                            <span class="users-list-date">gfhfg</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <!-- /.users-list -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-center">
+                    <a href="{{url_for('blog.news_list')}}">مشاهده همه خبرها</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!--/.card -->
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">تعداد کاربران ثبت نام شده</h3>
+            
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="myChart" height="240px"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">مرورگرهای کاربران</h3>
+            
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="myChart2" height="240px"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title"> مقالات</h3>
+            
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="myChart3" height="240px"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+          {% endblock %}
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <script src="{{url_for('static', filename='plugins/chart.js/Chart.bundle.min.js')}}"></script>
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [' 5 روز قبل', '4 روز قبل', '3 روز قبل', '2 روز قبل', 'دیروز', 'امروز'],
+        datasets: [{
+            label: 'ثبت نام شده',
+            data: [13, 10, 3, 40, 10, 5],
+            backgroundColor: [
+                'rgba(2, 117, 216)',
+                'rgba(92, 184, 92)',
+                'rgba(91, 192, 222)',
+                'rgba(240, 173, 78)',
+                'rgba(217, 83, 79)',
+                'rgba(1, 43, 44)'
+            ],
+            borderColor: [
+                'rgba(2, 117, 216)',
+                'rgba(92, 184, 92)',
+                'rgba(91, 192, 222)',
+                'rgba(240, 173, 78)',
+                'rgba(217, 83, 79)',
+                'rgba(1, 43, 44)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+            display: false
+        },
+        title: {
+            display: true,
+            text: 'تعداد یوزرها',
+            position: 'top',
+            fontSize: 16,
+            padding: 20
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0
+                }
+            }]
+        }
+    }
+});
+</script>
+
+<script>
+// Doughnut chart
+var ctx = document.getElementById('myChart2').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Chrome', 'Firefox', 'Opera', 'Safari', 'Edge', 'Other'],
+        datasets: [{
+            data: [27, 17, 14, 26, 12, 5],
+            backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#343a40'],
+            borderWidth: 0.5 ,
+            borderColor: '#ddd'
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Recommended Daily Diet',
+            position: 'top',
+            fontSize: 16,
+            fontColor: '#111',
+            padding: 20
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                boxWidth: 20,
+                fontColor: '#111',
+                padding: 15
+            }
+        },
+        tooltips: {
+            enabled: false
+        },
+        plugins: {
+            datalabels: {
+                color: '#111',
+                textAlign: 'center',
+                font: {
+                    lineHeight: 1.6
+                },
+                formatter: function(value, ctx) {
+                    return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value + '%';
+                }
+            }
+        }
+    }
+});
+</script>
+
+<script>
+  const xValues = [100,200,300,400,500,600,700,800,900,1000];
+
+  new Chart("myChart3", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [{
+        data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+        borderColor: "red",
+        fill: false
+      },{
+        data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+        borderColor: "green",
+        fill: false
+      },{
+        data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+        borderColor: "blue",
+        fill: false
+      }]
+    },
+    options: {
+      legend: {display: false}
+    }
+  });
+</script>
+{% endblock %}

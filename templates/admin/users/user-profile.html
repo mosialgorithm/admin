@@ -1,0 +1,203 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-clock-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text"> آخرین ورود </span>
+                <span class="info-box-number">{{current_user.last_login.strftime("%Y/%m/%d")}} </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-success"><i class="fa fa-map-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text"> IP وارد شده</span>
+                <span class="info-box-number">{{current_user.last_ip}}</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-warning"><i class="fa fa-smile-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text"> وضعیت</span>
+                <span class="info-box-number">{% if current_user.active %} فعال {% else %} غیرفعال {% endif %} </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-primary"><i class="fa fa-hand-peace-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text"> نقش کاربر</span>
+                <span class="info-box-number">{% if current_user.role == 0 %}  ادمین {% elif current_user.role == 1 %} کاربر درجه یک {% else %} کاربر درجه دو {% endif %}</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+
+</div>
+{% endblock %}
+
+{% block main_content %}
+<div class="offset-md-4 col-4">
+    <div class="card card-primary">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="text-center">
+                <img class="img-fluid" src="{{url_for('static', filename=current_user.avatar)}}"  alt="User profile picture">
+            </div>
+
+            <hr>
+
+            <strong><i class="fa fa-user mr-1"></i> نام و نام خانوادگی</strong>
+            <p class="text-muted">
+                <span>{{current_user.name}}</span> 
+            </p>
+
+            <hr>
+
+            <strong><i class="fa fa-book mr-1"></i> تحصیلات</strong>
+            {% set education = current_user.education.split("###") %}
+            <p class="text-muted">
+                <span>{{education[0]}}</span> - <span>{{education[1]}}</span> - <span>{{education[2]}}</span>
+            </p>
+
+            <hr>
+
+            <strong><i class="fa fa-map-marker mr-1"></i> موقعیت</strong>
+            {% set address = current_user.address.split("###") %}
+            <p class="text-muted"> <span>{{address[0]}}</span> - <span> {{address[1]}} </span> </p>
+
+            <hr>
+
+            <strong><i class="fa fa-pencil mr-1"></i> مهارت‌ها</strong>
+
+            <p class="text-muted">
+                {% set skills = current_user.skills.split("###") %}
+                <span class="badge badge-danger">{{skills[0]}}</span>
+                <span class="badge badge-success">{{skills[1]}}</span>
+                <span class="badge badge-info">{{skills[2]}}</span>
+                <span class="badge badge-warning">{{skills[3]}}</span>
+                <span class="badge badge-primary">{{skills[4]}}</span>
+            </p>
+
+            <hr>
+
+            <strong><i class="fa fa-file-text-o mr-1"></i> یادداشت</strong>
+
+            <p class="text-muted">{{current_user.about_me}}</p>
+
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+<div class="offset-md-3 col-md-6">
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title"><span> ویرایش کاربر </span><span> {{current_user.name}} </span></h3>
+        </div>
+        <div class="card-body">
+            <form class="form-group" action="{{url_for('admin.user_profile')}}" method="post" enctype="multipart/form-data">
+                {{form.csrf_token()}}
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">نام و نام خانوادگی</label>
+                    <div class="col-sm-10">
+                        {{form.name(class='form-control', value=current_user.name)}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">نام کاربری</label>
+                    <div class="col-sm-10">
+                        {{form.username(class='form-control', value=current_user.username)}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">آدرس</label>
+                    {% set address = current_user.address.split("###") %}
+                    <div class="col-sm-2">
+                        {{form.address_province(class='form-control', value=address[0], placeholder='استان')}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.address_city(class='form-control', value=address[1], placeholder='شهر')}}
+                    </div>
+                    <div class="col-sm-4">
+                        {{form.address_street(class='form-control', value=address[2], placeholder='خیابان')}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.address_house_number(class='form-control', value=address[3], placeholder='پلاک')}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label"> تحصیلات</label>
+                    {% set education = current_user.education.split("###") %}
+                    <div class="col-sm-4">
+                        {{form.education_degree(class='form-control', placeholder='مدرک', value=education[0])}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.education_field(class='form-control', placeholder='رشته تحصیلی', value=education[1])}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.education_area(class='form-control', placeholder='گرایش', value=education[2])}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label"> مهارت ها</label>
+                    {% set skills = current_user.skills.split("###") %}
+                    <div class="col-sm-2">
+                        {{form.skill_one(class='form-control', placeholder='مهارت اول', value=skills[0])}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.skill_two(class='form-control', placeholder='مهارت دوم', value=skills[1])}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.skill_three(class='form-control', placeholder='مهارت سوم', value=skills[2])}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.skill_four(class='form-control', placeholder='مهارت چهارم', value=skills[3])}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form.skill_five(class='form-control', placeholder='مهارت پنجم', value=skills[4])}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">درباره من</label>
+                    <div class="col-sm-10">
+                        {{form.about_me(class='form-control', placeholder='بیوگرافی خود را وارد نمایید', default=current_user.about_me)}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label"> عکس پروفایل </label>
+                    <div class="col-sm-10">
+                        {{form.avatar(class='form-control', value=current_user.avatar)}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-md-4 col-sm-4">
+                        <button type="submit" class="btn btn-primary"> اعمال تغییرات </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

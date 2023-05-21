@@ -1,0 +1,19 @@
+{% extends 'auth/index.html' %}
+
+{% block auth_content %}
+<div class="register-box">
+    <div class="card">
+        <div class="card-body register-card-body">
+            <form action="{{url_for('auth.superuser')}}" method="post">
+                {{form.csrf_token()}}
+                <div class="input-group mb-3">
+                    {{form.password(class='form-control')}}
+                </div>
+                <div class="offset-sm-4 col-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat" id="register-btn">ثبت</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

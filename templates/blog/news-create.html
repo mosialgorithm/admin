@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %} صفحه ادمین سایت {% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                {% include 'error.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            {% block small_boxes %}{% endblock %}
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                {% block main_content %}
+                <div class="offset-md-3 col-md-6">
+                    <div class="card card-success">
+
+                        <div class="card-header">
+                            <h3 class="card-title"> ایجاد خبر جدید</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <form action="{{url_for('blog.news_create')}}" method="post" enctype="multipart/form-data">
+                                {{ form.csrf_token }}
+                                <!-- text input -->
+                                <div class="form-group">
+                                    <label>عنوان خبر</label>
+                                    <!-- <input type="text" class="form-control" placeholder="وارد کردن اطلاعات ..."> -->
+                                    {{form.title(class='form-control', placeholder='عنوان خبر را وارد نمایید')}}
+                                </div>
+                                <div class="form-group">
+                                    <label>متن خبر</label>
+                                    {{form.body(class='form-control', placeholder='عنوان خبر را وارد نمایید', rows=5)}}
+                                </div>
+                                <div class="form-group">
+                                    <label> عکس برای خبر</label>
+                                    {{form.image(class='form-control')}}
+                                </div>
+                                <!-- checkbox -->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        {{form.draft()}}
+                                        <label class="form-check-label">انتشار</label>
+                                    </div>
+                                </div>
+
+                                <!-- Date range -->
+                                <div class="form-group">
+                                    <label>انتخاب تاریخ:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        </div>
+                                        <input class="normal-example form-control pwt-datepicker-input-element" id="published_at" name="published_at">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success"> ایجاد خبر </button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <!-- /.card-body -->
+
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- Persian Data Picker -->
+<script src="{{url_for('static', filename='js/persian-date.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/persian-datepicker.min.js')}}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#published_at").pDatepicker({
+            
+            altField: '#published_at',
+            altFormat: "YYYY-MM-DD hh:mm:ss",
+            observer: true,
+            format: "YYYY-MM-DD hh:mm:ss",
+        });
+    });
+</script>
+
+{% endblock %}
+1402-02-27 13:15:47.859094

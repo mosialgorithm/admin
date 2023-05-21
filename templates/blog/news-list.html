@@ -1,0 +1,190 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-users"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text"> کل خبرها </span>
+                <span class="info-box-number">{{news_all|count}} </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-success"><i class="fa fa-user"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">  آخرین نویسنده</span>
+                <span class="info-box-number">{{news_all[-1].writer(news_all[-1].user_id)}}</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-warning"><i class="fa fa-smile-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">کاربران درجه یک</span>
+                <span class="info-box-number"> <small>نفر</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-primary"><i class="fa fa-hand-peace-o"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">کاربران فعال</span>
+                <span class="info-box-number"><small>نفر</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+
+</div>
+{% endblock %}
+
+{% block main_content %}
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست خبرهای سایت</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1"> عنوان خبر</th>
+                                    <th class="sorting" rowspan="1" colspan="1">متن خبر</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> عکس خبر</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> نویسنده </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> تاریخ ایجاد خبر </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> تاریخ نمایش خبر </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> پیش نویس </th>
+                                    <th class="sorting" rowspan="1" colspan="1">  تعداد بازدید </th>
+                                    <th class="sorting" rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for news in all_news.items %}
+                                <tr role="row" class="odd">
+                                    <td class="td-name text-sm"><a href="{{url_for('blog.news_detail', news_id=news.id, news_slug=news.slug)}}">{{news.title}}</a></td>
+                                    <td class="text-sm">{{news.body|truncate(50, True)}}</td>
+                                    <td><img src="{{url_for('static', filename=news.image)}}" alt="" width="100px"
+                                        height="50px"></td>
+                                    <td><img src="{{url_for('static', filename=news.writer_image(news.user_id))}}"
+                                        class="rounded" width="50" height="50" alt=""
+                                        data-toggle="tooltip" data-placement="top" title="{{news.writer(news.user_id)}}"></td>
+                                    <td class="text-sm text-secondary">
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{news.created_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{news.created_at.strftime('%H:%m')}}</span>
+                                    </td>
+                                    <td class="text-sm {% if news.published_at > datetime.now() %} text-success {% else %} text-danger {% endif %}">
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{news.published_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{news.published_at.strftime('%H:%m')}}</span>
+                                    </td>
+                                    <td>
+                                        {% if news.draft %}
+                                        <a href="{{url_for('blog.news_draft', news_id=news.id)}}" 
+                                        class="btn btn-sm btn-danger"><span class="text-sm"> پیش نویس </span></a>
+                                        {% else %}
+                                        <a href="{{url_for('blog.news_draft', news_id=news.id)}}" 
+                                        class="btn btn-sm btn-success"> <span class="text-sm">منتشرشده</span> </a>
+                                        {% endif %}
+                                    </td>
+                                    <td> {{news.views}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{url_for('blog.news_edit', news_id=news.id)}}" class="btn btn-sm btn-info btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>
+                                            <a href="{{url_for('blog.news_delete', news_id=news.id)}}" class="btn btn-sm btn-warning"> <i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-5"></div>
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                            <ul class="pagination">
+                                {% if all_news.has_prev %}
+                                <li class="paginate_button page-item previous" id="example1_previous">
+                                    <a href="{{url_for('blog.news_list', page=all_news.prev_num)}}" aria-controls="example1" data-dt-idx="0" tabindex="0"
+                                        class="page-link">قبلی</a>
+                                </li>
+                                {% endif %}
+                                {% for page_number in all_news.iter_pages() %}
+                                    {% if page_number %}
+                                        <li class="paginate_button page-item">
+                                            <a href="{{url_for('blog.news_list', page=page_number)}}"
+                                                aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
+                                            {{page_number}}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if all_news.has_next %}
+                                <li class="paginate_button page-item next" id="example1_next">
+                                    <a href="{{url_for('blog.news_list', page=all_news.next_num)}}"
+                                        aria-controls="example1" data-dt-idx="7" tabindex="0"
+                                        class="page-link">بعدی</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+
+{% endblock %}
+
+
+{% for page_number in all_news.iter_pages() %}
+{% if page_number %}
+    <li class="paginate_button page-item">
+        <a href="{{url_for('blog.news_list', page=page_number)}}"
+            aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
+        {{page_number}}
+        </a>
+    </li>
+{% else %}
+    <li class="paginate_button page-item">
+        <a href="#"
+            aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
+        {{page_number}}
+        </a>
+    </li>
+{% endif %}
+{% endfor %}

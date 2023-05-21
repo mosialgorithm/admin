@@ -12,6 +12,9 @@ class Config(object):
     UPLOAD_DIR = os.path.curdir + '/static/uploads/'
     SECRET_KEY = os.getenv('SECRET_KEY')
     # SECRET_KEY = "my_name_is_mostafa_ghorbani"
+    REDIS_HOST = os.getenv('REDIS_HOST')
+    REDIS_PORT = os.getenv('REDIS_PORT')
+    REDIS_DB = os.getenv('REDIS_DB')
 
 
 
