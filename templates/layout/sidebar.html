@@ -96,6 +96,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a href="{{url_for('blog.category_add')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ایجاد دسته بندی جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="{{url_for('blog.news_list')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>لیست اخبار</p>
@@ -105,6 +111,12 @@
                   <a href="{{url_for('blog.news_all')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>نمایش تمامی اخبار</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('blog.comments_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> لیست کامنت ها</p>
                   </a>
                 </li>
               </ul>

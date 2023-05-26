@@ -70,10 +70,12 @@
                                     </div>
                                     <!-- /.input group -->
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group float-right">
                                     <button type="submit" class="btn btn-success"> ثبت تغییرات </button>
                                 </div>
-
+                                <div class="form-group float-left">
+                                    <a href="{{url_for('blog.news_detail', news_id=news.id, news_slug=news.slug)}}" type="submit" class="btn btn-info"> نمایش خبر </a>
+                                </div>
                             </form>
                         </div>
                         <!-- /.card-body -->
@@ -106,5 +108,8 @@
         });
     });
 </script>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='body') }}
 
 {% endblock %}

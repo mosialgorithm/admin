@@ -3,7 +3,7 @@
 {% block title %} مشاهده خبر {{news.title}} {% endblock %}
 
 {% block content %}
-
+{{ super() }}
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -40,6 +40,11 @@
                             <div class="tab-pane active show">
                                 <!-- Post -->
                                 <div class="post">
+                                    {% if current_user.role == 0 %}
+                                    <a class="btn btn-warning btn-sm mb-2 text-center p-2" href="{{url_for('blog.news_edit', news_id=news.id)}}">
+                                        <i class="fa fa-edit ml-2"></i><i>ویرایش خبر </i>
+                                    </a>
+                                    {% endif %}
                                     <div class="user-block">
                                         <img class="img-circle img-bordered-sm"
                                             src="{{url_for('static', filename=news.writer_image(news.user_id))}}"
@@ -56,7 +61,7 @@
                                     <!-- /.user-block -->
                                     <img src="{{url_for('static', filename=news.image)}}" width="720" alt=""
                                         class="mb-5">
-                                    <p>{{news.body}}</p>
+                                    <p>{{news.body|safe}}</p>
                                     <p>
                                         <a href="#" class="link-black text-sm mr-2"><i class="fa fa-share mr-1"></i>
                                             اشتراک گذاری</a>
@@ -76,7 +81,7 @@
                                             <i class="fa fa-heart mr-1"></i> لایک ({{lst|count}})
                                         </span>
                                     </p>
-                                    <form class="form-horizontal" action="{{url_for('blog.send_comment', news_id=news.id)}}" method="post">
+                                    <form class="form-horizontal comment-form" action="{{url_for('blog.send_comment', news_id=news.id)}}" method="post">
                                         {{form.csrf_token}}
                                         <div class="input-group input-group-sm mb-0">
                                             {{form.title(class="form-control form-control-sm", placeholder="نظر خود را تایپ کنید")}}
@@ -106,11 +111,13 @@
                                     </span>
                                     <span class="description"><i>ارسال شده
                                             -</i><i>{{moment(comment.created_at).fromNow()}}</i></span>
+                                    <span class="text-danger text-sm float-left show-reply-box" style="cursor: pointer;">پاسخ</span>
                                 </div>
                                 <!-- /.user-block -->
                                 <p class="text-sm">{{comment.title}}</p>
             
-                                <form class="form-horizontal" action="{{url_for('blog.send_reply', news_id=news.id, comment_id=comment.id)}}" method="post">
+                                <form class="form-horizontal replay-form" action="{{url_for('blog.send_reply', news_id=news.id, comment_id=comment.id)}}" 
+                                      method="post">
                                     {{form.csrf_token}}
                                     <div class="input-group input-group-sm mb-0">
                                         {{form.title(class="form-control form-control-sm", placeholder="نظر خود را تایپ کنید")}}
@@ -151,5 +158,6 @@
     <!-- /.content -->
 </div>
 
-
+{{ ckeditor.load_code_theme() }}
+{{ ckeditor.config(name='body') }}
 {% endblock %}

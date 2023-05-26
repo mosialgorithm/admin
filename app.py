@@ -7,6 +7,11 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_redis import Redis
 from persiantools.jdatetime import JalaliDateTime
+from flask_ckeditor import CKEditor
+from flask_wtf.csrf import CSRFProtect
+
+
+
 
 
 
@@ -35,6 +40,10 @@ migrate = Migrate(app, db, compare_type=True)
 moment = Moment(app)
 
 redis = Redis(app)
+
+ckeditor = CKEditor(app)
+
+csrf = CSRFProtect(app)
 
 
 

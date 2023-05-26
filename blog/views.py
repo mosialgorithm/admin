@@ -1,14 +1,13 @@
-from persiantools.jdatetime import JalaliDateTime
+from persiantools.jdatetime import JalaliDateTime, digits
 from datetime import datetime
 from flask import redirect, render_template, request, url_for, session, flash
 from app import db
 from . import blog
-from .models import News, NewsLike, Comment, Reply
+from .models import News, NewsLike, Comment, Reply, Category
 from .forms import NewPostForm, NewsEditForm, CommentForm
 from flask_login import login_user, logout_user, current_user
 from utils import save_avatar, jdt_from_pdp, jdt_to_gregorian
 from sqlalchemy.exc import IntegrityError
-import pytz
 
 
 
@@ -215,8 +214,7 @@ def send_comment(news_id):
                 return redirect(request.referrer)
     return redirect(request.referrer)
     
-    
-    
+       
 @blog.route('send-reply/<int:news_id>/<int:comment_id>', methods=['POST'])
 def send_reply(news_id, comment_id):
     form = CommentForm()
@@ -239,14 +237,20 @@ def send_reply(news_id, comment_id):
         finally:
             return redirect(request.referrer)
     return redirect(request.referrer)
-        
-    
+           
 
 @blog.route('news-all')
 def news_all():
     news_all = News.query.filter_by(draft=0).order_by(News.created_at.desc()).all()
     print('9'*50)
+    print(datetime.now())
     for news in news_all:
+        if news.published_at <= datetime.now():
+            news.draft = False
+            print('=============== draft of this news has been Falsed ============')
+            print(news)
+            db.session.add(news)
+            db.session.commit()
         print(news.created_at, news.title)
     print('9'*50)
     # most_views = news_all.order_by(News.view)[1]
@@ -264,3 +268,123 @@ def news_all():
     return render_template('blog/news-all.html', news_all=news_all, most_view=most_view)
 
 
+@blog.route('comments-list')
+def comments_list():
+    page = request.args.get('page', default=1, type=int)
+    all_comments = Comment.query.order_by(Comment.created_at.desc()).paginate(page=page, per_page=7)
+    
+    for comment in all_comments:
+        comment.created_at = JalaliDateTime.to_jalali(comment.created_at)
+    
+    
+    return render_template('blog/comments-list.html', all_comments=all_comments) 
+
+
+@blog.route('comment-in-news/<int:news_id>')
+def comments_in_news(news_id):
+    page = request.args.get('page', default=1, type=int)
+    all_comments = Comment.query.filter_by(news_id=news_id).order_by(Comment.created_at.desc()).paginate(page=page, per_page=7)
+    
+    for comment in all_comments:
+        comment.created_at = JalaliDateTime.to_jalali(comment.created_at)
+    
+    
+    return render_template('blog/comments-list.html', all_comments=all_comments, news_id=news_id) 
+
+
+@blog.route('comment-show/<int:comment_id>')
+def comment_show(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.show:
+        comment.show = False
+        flash(f'since time the reply {comment.title} is hidden', 'warning')
+    else:
+        comment.show = True
+        flash(f'since time the reply {comment.title} is shown', 'success')
+    db.session.add(comment)
+    db.session.commit()
+    
+    return redirect(request.referrer)
+
+
+@blog.route('replies-list/<int:comment_id>')
+def replies_list(comment_id):
+    page = request.args.get('page', default=1, type=int)
+    all_replies = Reply.query.filter_by(comment_id=comment_id).order_by(Reply.created_at.desc()).paginate(page=page, per_page=7)
+    
+    for reply in all_replies:
+        reply.created_at = JalaliDateTime.to_jalali(reply.created_at)
+        
+    return render_template('blog/replies-list.html', all_replies=all_replies, comment_id=comment_id)
+
+
+@blog.route('reply-show/<int:reply_id>')
+def reply_show(reply_id):
+    reply = Reply.query.get_or_404(reply_id)
+    if reply.show:
+        reply.show = False
+        flash(f'since time the reply {reply.title} is hidden', 'warning')
+    else:
+        reply.show = True
+        flash(f'since time the reply {reply.title} is shown', 'success')
+    db.session.add(reply)
+    db.session.commit()
+    
+    return redirect(request.referrer)
+
+
+@blog.route('category-add', methods=['POST', 'GET'])
+def category_add():
+    form = CommentForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        category = Category()
+        category.title = request.form.get('title')
+        try:
+            db.session.add(category)
+            db.session.commit()
+            flash('your category is added successfully', 'success')
+        except IntegrityError as ie:
+            flash('the name is saved previously, please try by another name', 'warning')
+        except Exception as ex:
+            flash(f'error {ex} is happened, please try again', 'danger')
+        finally:
+            return redirect(url_for('blog.category_add', form=form))
+    
+    categories = Category.query.all()
+    
+    return render_template('blog/category-add.html', form=form, categories=categories)
+
+
+
+@blog.route('category-edit/<string:cat_title>', methods=['POST', 'GET'])
+def category_edit(cat_title):
+    form = CommentForm()
+    category = Category.query.filter_by(title=cat_title).one()
+    if request.method == 'POST' and form.validate_on_submit():
+        category.title = request.form.get('title')
+        try:
+            db.session.add(category)
+            db.session.commit()
+            flash('your category is editted successfully', 'success')
+        except IntegrityError:
+            flash('the name is saved previously, please try by another name', 'warning')
+        except Exception as ex:
+            flash(f'error {ex} is happened, please try again', 'danger')
+        finally:
+            return redirect(url_for('blog.category_add', form=form))
+    
+    categories = Category.query.all()
+    
+    return render_template('blog/category-edit.html', form=form, category=category, categories=categories)
+
+
+
+@blog.route('category-delete/<string:cat_title>', methods=['GET','POST'])
+def category_delete(cat_title):
+    form = CommentForm()
+    category = Category.query.filter_by(title=cat_title).one()
+    db.session.delete(category)
+    db.session.commit()
+    
+    categories = Category.query.all()
+    return redirect(url_for('blog.category_add', form=form, categories=categories))

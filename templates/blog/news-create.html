@@ -48,6 +48,10 @@
                                     <label> عکس برای خبر</label>
                                     {{form.image(class='form-control')}}
                                 </div>
+                                <div class="form-group">
+                                    <label> انتخاب دسته بندی</label>
+                                    {{form.category(class='form-control')}}
+                                </div>
                                 <!-- checkbox -->
                                 <div class="form-group">
                                     <div class="form-check">
@@ -103,5 +107,8 @@
     });
 </script>
 
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='body') }}
+
 {% endblock %}
-1402-02-27 13:15:47.859094

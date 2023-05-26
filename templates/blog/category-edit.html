@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %} صفحه ادمین سایت {% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                {% include 'error.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            {% block small_boxes %}{% endblock %}
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                {% block main_content %}
+                <div class="offset-md-3 col-md-6">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title"> ویرایش {{category.title}} </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <form action="{{url_for('blog.category_edit', cat_title=category.title)}}" method="post">
+                                {{ form.csrf_token }}
+                                <!-- text input -->
+                                <div class="form-group">
+                                    <label>عنوان </label>
+                                    {{form.title(class="form-control", value=category.title)}}
+                                </div> 
+                                <div class="form-group float-right">
+                                    <button type="submit" class="btn btn-success">  ویرایش </button>
+                                </div>
+                            </form>
+                            <form action="{{url_for('blog.category_delete', cat_title=category.title)}}" method="post">
+                                {{ form.csrf_token }}
+                                <div class="form-group float-left">
+                                    <button type="submit" class="btn btn-danger">  حذف </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            {% for cat in categories %}
+                            <form action="{{url_for('blog.category_edit', cat_title=cat.title)}}" style="display:inline-block">
+                                <button class="btn btn-sm btn-default mt-1" type="submit">
+                                    <i class="fa fa-hashtag"></i> <i>{{cat.title}}</i>
+                                </button>
+                            </form>
+                            {% endfor %}
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+{% endblock %}

@@ -19,3 +19,6 @@ class LoginForm(FlaskForm):
 
 class SuperUserForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired('گذرواژه خود را وارد نمایید'), Length(min=8)])
+    
+
+    

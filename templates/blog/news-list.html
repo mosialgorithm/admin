@@ -72,6 +72,7 @@
                         <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
                             <thead>
                                 <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1"> ID خبر</th>
                                     <th class="sorting" rowspan="1" colspan="1"> عنوان خبر</th>
                                     <th class="sorting" rowspan="1" colspan="1">متن خبر</th>
                                     <th class="sorting" rowspan="1" colspan="1"> عکس خبر</th>
@@ -80,18 +81,20 @@
                                     <th class="sorting" rowspan="1" colspan="1"> تاریخ نمایش خبر </th>
                                     <th class="sorting" rowspan="1" colspan="1"> پیش نویس </th>
                                     <th class="sorting" rowspan="1" colspan="1">  تعداد بازدید </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> نمایش کامنت ها </th>
                                     <th class="sorting" rowspan="1" colspan="1">عملیات</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for news in all_news.items %}
                                 <tr role="row" class="odd">
+                                    <td class="td-name text-sm">{{news.id}}</td>
                                     <td class="td-name text-sm"><a href="{{url_for('blog.news_detail', news_id=news.id, news_slug=news.slug)}}">{{news.title}}</a></td>
-                                    <td class="text-sm">{{news.body|truncate(50, True)}}</td>
+                                    <td class="text-sm">{{news.body|safe|truncate(50, True)}}</td>
                                     <td><img src="{{url_for('static', filename=news.image)}}" alt="" width="100px"
                                         height="50px"></td>
                                     <td><img src="{{url_for('static', filename=news.writer_image(news.user_id))}}"
-                                        class="rounded" width="50" height="50" alt=""
+                                        class="img-circle elevation-2" width="50" height="50" alt=""
                                         data-toggle="tooltip" data-placement="top" title="{{news.writer(news.user_id)}}"></td>
                                     <td class="text-sm text-secondary">
                                         <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{news.created_at.strftime('%Y/%m/%d')}}</span>
@@ -110,7 +113,8 @@
                                         class="btn btn-sm btn-success"> <span class="text-sm">منتشرشده</span> </a>
                                         {% endif %}
                                     </td>
-                                    <td> {{news.views}}</td>
+                                    <td> <span class="text-info text-lg">{{news.views}}</span></td>
+                                    <td><a href="{{url_for('blog.comments_in_news', news_id=news.id)}}" class="btn btn-sm btn-secondary"> نمایش همه </a></td>
                                     <td>
                                         <div class="btn-group">
                                             <a href="{{url_for('blog.news_edit', news_id=news.id)}}" class="btn btn-sm btn-info btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>

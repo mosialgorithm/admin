@@ -90,6 +90,9 @@
     </script>
    -->
 
+   <script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
+
+
   {{ moment.include_moment() }}
   {{ moment.locale("fa", fa) }}
 
@@ -97,6 +100,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
+  {{ ckeditor.load(custom_url=url_for('static', filename='js/ckeditor.js')) }}
   <div class="wrapper">
 
     <!-- Navbar -->

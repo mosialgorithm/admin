@@ -1,0 +1,111 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+
+{% endblock %}
+
+{% block main_content %}
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست خبرهای سایت</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1"> ID کامنت</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> عنوان پاسخ به کامنت</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> عنوان کامنت</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> عنوان خبر</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> نویسنده </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> تاریخ ایجاد خبر </th>
+                                    <th class="sorting" rowspan="1" colspan="1">  نمایش / عدم نمایش </th>
+                                    <th class="sorting" rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reply in all_replies.items %}
+                                <tr role="row" class="odd">
+                                    <td class="td-name text-sm">{{reply.id}}</td>
+                                    <td class="td-name">{{reply.title}}</td>
+                                    <td class="td-name text-sm">{{reply.comment_title(reply.comment_id)}}</td>
+                                    <td class="td-name text-sm">{{reply.news_title(reply.news_id)}}</td>
+                                    <td><img src="{{url_for('static', filename=reply.writer_image(reply.user_id))}}"
+                                        class="img-circle elevation-2" width="50" height="50" alt=""
+                                        data-toggle="tooltip" data-placement="top" title="{{reply.writer(reply.user_id)}}"></td>
+                                    <td class="text-sm text-secondary">
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{reply.created_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{reply.created_at.strftime('%H:%m')}}</span>
+                                    </td>
+                                    <td>
+                                        {% if reply.show %}
+                                        <a href="{{url_for('blog.reply_show', reply_id=reply.id)}}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-check ml-1"></i><i>نمایش</i></a>
+                                        {% else %}
+                                        <a href="{{url_for('blog.reply_show', reply_id=reply.id)}}" class="btn btn-sm btn-danger"><i class="fa fa-times ml-1">
+                                        </i><i>عدم نمایش</i></a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="" class="btn btn-sm btn-info btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>
+                                            <a href="" class="btn btn-sm btn-warning"> <i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-5"></div>
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                            <ul class="pagination">
+                                {% if all_replies.has_prev %}
+                                <li class="paginate_button page-item previous" id="example1_previous">
+                                    <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=all_replies.prev_num)}}" aria-controls="example1" data-dt-idx="0" tabindex="0"
+                                        class="page-link">قبلی</a>
+                                </li>
+                                {% endif %}
+                                {% for page_number in all_replies.iter_pages() %}
+                                    {% if page_number %}
+                                        <li class="paginate_button page-item">
+                                            <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=page_number)}}"
+                                                aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
+                                            {{page_number}}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if all_replies.has_next %}
+                                <li class="paginate_button page-item next" id="example1_next">
+                                    <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=all_replies.next_num)}}"
+                                        aria-controls="example1" data-dt-idx="7" tabindex="0"
+                                        class="page-link">بعدی</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+
+{% endblock %}

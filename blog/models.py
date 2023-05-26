@@ -27,6 +27,7 @@ class Reply(db.Model):
     news_id = db.Column(db.Integer(), db.ForeignKey('news.id'))
     comment_id = db.Column(db.Integer(), db.ForeignKey('comments.id'))
     created_at = db.Column(db.DateTime(), default=datetime.now())
+    show = db.Column(db.Boolean(), default=False)
     
     def __repr__(self):
         return self.title[:20]
@@ -37,11 +38,11 @@ class Reply(db.Model):
     def writer_image(self, user_id):
         return User.query.get(user_id).avatar
     
-    def news_title(self):
-        return News.query.get(self.news_id).title
+    def news_title(self,news_id):
+        return News.query.get(news_id).title
     
-    def comment_title(self):
-        return Comment.query.get(self.comment_id).title
+    def comment_title(self, comment_id):
+        return Comment.query.get(comment_id).title
     
 
 
@@ -53,6 +54,7 @@ class Comment(db.Model):
     news_id = db.Column(db.Integer(), db.ForeignKey('news.id'))
     created_at = db.Column(db.DateTime(), default=datetime.now())
     replies = db.relationship('Reply', backref='comment')
+    show = db.Column(db.Boolean(), default=False)
     
     def __repr__(self):
         return self.title[:20]
@@ -63,8 +65,13 @@ class Comment(db.Model):
     def writer_image(self, user_id):
         return User.query.get(user_id).avatar
     
-    def news_title(self):
-        return News.query.get(self.news_id).title
+    def news_title(self, news_id):
+        return News.query.get(news_id).title
+    
+    
+news_category = db.Table('news_category',
+                         db.Column('news_id', db.Integer, db.ForeignKey('news.id')),
+                         db.Column('category_id', db.Integer, db.ForeignKey('categories.id')))
     
     
 
@@ -85,6 +92,7 @@ class News(db.Model):
     views = db.Column(db.Integer(), default=0)
     users_like = db.relationship('NewsLike', backref='news')
     comments = db.relationship('Comment', backref='news')
+    categories = db.relationship('Category', secondary=news_category, backref='news')
     
     def __repr__(self):
         return f'{self.id} --> {self.title}'
@@ -101,6 +109,17 @@ class News(db.Model):
             cls.slug = slugify(value, allow_unicode=True)
     
 
+
+
+class Category(db.Model):
+    __tablename__  = 'categories'
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(200), nullable=False, unique=True)
+    created_at = db.Column(db.DateTime(), default=datetime.now())
+    
+    def __repr__(self):
+        return self.title
+    
 
 
 db.event.listen(News.title, 'set', News.generate_slug, retval=False)
