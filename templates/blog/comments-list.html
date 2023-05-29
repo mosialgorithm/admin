@@ -8,8 +8,12 @@
 <div class="col-md-12 text-center">
     <div class="card">
         <div class="card-header text-center">
-            <h3 class="card-title">لیست خبرهای سایت</h3>
+            <h3 class="card-title">لیست کامنت ها  </h3>
         </div>
+        {% if all_comments.items == [] %}
+        <p class="bg-warning text-center p-2"> کامنتی برای این خبر وجود ندارد </p>
+        <a class="text-sm text-danger text-center" href="{{url_for('blog.news_detail', news_id=news.id, news_slug=news.slug)}}"> بازگشت به خبر </a>
+        {% else %}
         <!-- /.card-header -->
         <div class="card-body">
             <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
@@ -62,6 +66,7 @@
                         </table>
                     </div>
                 </div>
+                {% if all_comments.items %}
                 <div class="row">
                     <div class="col-sm-12 col-md-5"></div>
                     <div class="col-sm-12 col-md-7">
@@ -69,8 +74,8 @@
                             <ul class="pagination">
                                 {% if all_comments.has_prev %}
                                 <li class="paginate_button page-item previous" id="example1_previous">
-                                    <a href="{{url_for('blog.comments_list', page=all_comments.prev_num)}}" aria-controls="example1" data-dt-idx="0" tabindex="0"
-                                        class="page-link">قبلی</a>
+                                    <a href="{{url_for('blog.comments_list', page=all_comments.prev_num)}}" 
+                                    aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a>
                                 </li>
                                 {% endif %}
                                 {% for page_number in all_comments.iter_pages() %}
@@ -94,9 +99,11 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <!-- /.card-body -->
+        {% endif %}
     </div>
 </div>
 

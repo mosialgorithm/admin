@@ -42,5 +42,28 @@ class User(db.Model, UserMixin):
     
     
     
+class UserLogs(db.Model):
+    __tablename__ = 'users_logs'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))    
+    created_at = db.Column(db.DateTime(), default=datetime.now())
+    title = db.Column(db.String(200))
+    model_name = db.Column(db.String(200))
+    model_id = db.Column(db.Integer())
+    
+    def __repr__(self):
+        return f'{self.title} at {self.created_at}'
+
+    def save_log(self, user_id, title, obj):
+        """saving event log by any user"""
+        self.user_id = user_id
+        self.title = title
+        self.model_id = obj.id
+        self.model_name = f'{type(obj)}'
+        
+        db.session.add(self)
+        db.session.commit()
+    
+    
     
     

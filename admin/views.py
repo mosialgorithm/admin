@@ -4,7 +4,7 @@ from app import db, app
 from . import admin
 from flask_login import login_required, current_user
 from utils import admin_required
-from auth.models import User
+from auth.models import User, UserLogs
 from jdatetime import datetime, timedelta, date
 from .forms import UserEditForm, UserAddForm
 from werkzeug.utils import secure_filename
@@ -210,3 +210,16 @@ def users_info():
 @admin.route('user-calendar')
 def user_calendar():
     return render_template('/admin/users/user-calendar.html')
+
+
+@admin.route('user-log')
+def user_log():
+    user_logs = UserLogs.query.filter_by(user_id=current_user.id).order_by(UserLogs.created_at).all()
+    for log in user_logs:
+        log.created_at = log.created_at.strftime('%Y-%m-%d')
+    print('-*-'*50)
+    for log in user_logs:
+        print(log.title)
+    print('-*-'*50)
+    return render_template('admin/users/user-log.html', user_logs=user_logs)
+

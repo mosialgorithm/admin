@@ -8,10 +8,12 @@
 <div class="col-md-12 text-center">
     <div class="card">
         <div class="card-header text-center">
-            <h3 class="card-title"> <span>لیست پاسخ های کامنت</span> <span>{{comment.title}}</span></h3>
+            <h3 class="card-title">لیست کامنت ها  </h3>
         </div>
+        {% if all_comments.items == [] %}
+        <p class="bg-warning text-center p-2"> کامنت تایید نشده ای وجود ندارد </p>
+        {% else %}
         <!-- /.card-header -->
-        {% if all_replies.items %}
         <div class="card-body">
             <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
                 <div class="row">
@@ -20,7 +22,6 @@
                             <thead>
                                 <tr role="row">
                                     <th class="sorting" rowspan="1" colspan="1"> ID کامنت</th>
-                                    <th class="sorting" rowspan="1" colspan="1"> عنوان پاسخ به کامنت</th>
                                     <th class="sorting" rowspan="1" colspan="1"> عنوان کامنت</th>
                                     <th class="sorting" rowspan="1" colspan="1"> عنوان خبر</th>
                                     <th class="sorting" rowspan="1" colspan="1"> نویسنده </th>
@@ -30,25 +31,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for reply in all_replies.items %}
+                                {% for comment in all_comments.items %}
                                 <tr role="row" class="odd">
-                                    <td class="td-name text-sm">{{reply.id}}</td>
-                                    <td class="td-name">{{reply.title}}</td>
-                                    <td class="td-name text-sm">{{reply.comment_title(reply.comment_id)}}</td>
-                                    <td class="td-name text-sm">{{reply.news_title(reply.news_id)}}</td>
-                                    <td><img src="{{url_for('static', filename=reply.writer_image(reply.user_id))}}"
+                                    <td class="td-name text-sm">{{comment.id}}</td>
+                                    <td class="td-name"><a href="{{url_for('blog.replies_list', comment_id=comment.id)}}">{{comment.title}}</a></td>
+                                    <td class="td-name text-sm">{{comment.news_title(comment.news_id)}}</td>
+                                    <td><img src="{{url_for('static', filename=comment.writer_image(comment.user_id))}}"
                                         class="img-circle elevation-2" width="50" height="50" alt=""
-                                        data-toggle="tooltip" data-placement="top" title="{{reply.writer(reply.user_id)}}"></td>
+                                        data-toggle="tooltip" data-placement="top" title="{{comment.writer(comment.user_id)}}"></td>
                                     <td class="text-sm text-secondary">
-                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{reply.created_at.strftime('%Y/%m/%d')}}</span>
-                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{reply.created_at.strftime('%H:%m')}}</span>
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{comment.created_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{comment.created_at.strftime('%H:%m')}}</span>
                                     </td>
                                     <td>
-                                        {% if reply.show %}
-                                        <a href="{{url_for('blog.reply_show', reply_id=reply.id)}}" class="btn btn-sm btn-success">
+                                        {% if comment.show %}
+                                        <a href="{{url_for('blog.comment_show', comment_id=comment.id)}}" class="btn btn-sm btn-success">
                                             <i class="fa fa-check ml-1"></i><i>نمایش</i></a>
                                         {% else %}
-                                        <a href="{{url_for('blog.reply_show', reply_id=reply.id)}}" class="btn btn-sm btn-danger"><i class="fa fa-times ml-1">
+                                        <a href="{{url_for('blog.comment_show', comment_id=comment.id)}}" class="btn btn-sm btn-danger"><i class="fa fa-times ml-1">
+
                                         </i><i>عدم نمایش</i></a>
                                         {% endif %}
                                     </td>
@@ -64,30 +65,31 @@
                         </table>
                     </div>
                 </div>
+                {% if all_comments.items %}
                 <div class="row">
                     <div class="col-sm-12 col-md-5"></div>
                     <div class="col-sm-12 col-md-7">
                         <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
                             <ul class="pagination">
-                                {% if all_replies.has_prev %}
+                                {% if all_comments.has_prev %}
                                 <li class="paginate_button page-item previous" id="example1_previous">
-                                    <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=all_replies.prev_num)}}" aria-controls="example1" data-dt-idx="0" tabindex="0"
-                                        class="page-link">قبلی</a>
+                                    <a href="{{url_for('blog.comments_list', page=all_comments.prev_num)}}" 
+                                    aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a>
                                 </li>
                                 {% endif %}
-                                {% for page_number in all_replies.iter_pages() %}
+                                {% for page_number in all_comments.iter_pages() %}
                                     {% if page_number %}
                                         <li class="paginate_button page-item">
-                                            <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=page_number)}}"
+                                            <a href="{{url_for('blog.comments_list', page=page_number)}}"
                                                 aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
                                             {{page_number}}
                                             </a>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
-                                {% if all_replies.has_next %}
+                                {% if all_comments.has_next %}
                                 <li class="paginate_button page-item next" id="example1_next">
-                                    <a href="{{url_for('blog.replies_list', comment_id=comment_id, page=all_replies.next_num)}}"
+                                    <a href="{{url_for('blog.comments_list', page=all_comments.next_num)}}"
                                         aria-controls="example1" data-dt-idx="7" tabindex="0"
                                         class="page-link">بعدی</a>
                                 </li>
@@ -96,12 +98,11 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
-        {% else %}
-        <p class="text-danger p-2"> موردی ثبت نشده است </p>
-        {% endif %}
         <!-- /.card-body -->
+        {% endif %}
     </div>
 </div>
 

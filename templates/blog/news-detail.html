@@ -41,7 +41,8 @@
                                 <!-- Post -->
                                 <div class="post">
                                     {% if current_user.role == 0 %}
-                                    <a class="btn btn-warning btn-sm mb-2 text-center p-2" href="{{url_for('blog.news_edit', news_id=news.id)}}">
+                                    <a class="btn btn-warning btn-sm mb-2 text-center p-2"
+                                        href="{{url_for('blog.news_edit', news_id=news.id)}}">
                                         <i class="fa fa-edit ml-2"></i><i>ویرایش خبر </i>
                                     </a>
                                     {% endif %}
@@ -65,15 +66,15 @@
                                     <p>
                                         <a href="#" class="link-black text-sm mr-2"><i class="fa fa-share mr-1"></i>
                                             اشتراک گذاری</a>
-                                        <a href="{{url_for('blog.news_like', news_id=news.id, user_id=current_user.id)}}" 
+                                        <a href="{{url_for('blog.news_like', news_id=news.id, user_id=current_user.id)}}"
                                             class="link-black text-sm">
                                             {% if current_user.id in lst %}
-                                                <i class="fa fa-thumbs-o-down mr-1"></i>
-                                                دیسلایک</a>
-                                            {% else %}
-                                            <i class="fa fa-thumbs-o-up mr-1"></i>
-                                                لایک</a>
-                                            {% endif %}
+                                            <i class="fa fa-thumbs-o-down mr-1"></i>
+                                            دیسلایک</a>
+                                        {% else %}
+                                        <i class="fa fa-thumbs-o-up mr-1"></i>
+                                        لایک</a>
+                                        {% endif %}
                                         <span class="float-left link-black text-sm">
                                             <i class="fa fa-comments-o mr-1"></i> نظر ({{news.comments|count}})
                                         </span>
@@ -81,10 +82,19 @@
                                             <i class="fa fa-heart mr-1"></i> لایک ({{lst|count}})
                                         </span>
                                     </p>
-                                    <form class="form-horizontal comment-form" action="{{url_for('blog.send_comment', news_id=news.id)}}" method="post">
+                                    <p>
+                                        {% for cat in news.categories %}
+                                        <a href="{{url_for('blog.category_news', cat_title=cat.title)}}"
+                                            class="bg-secondary bg-sm p-1 text-sm"><i class="fa fa-hashtag"></i>
+                                            <i>{{cat.title}}</i></a>
+                                        {% endfor %}
+                                    </p>
+                                    <form class="form-horizontal comment-form"
+                                        action="{{url_for('blog.send_comment', news_id=news.id)}}" method="post">
                                         {{form.csrf_token}}
                                         <div class="input-group input-group-sm mb-0">
-                                            {{form.title(class="form-control form-control-sm", placeholder="نظر خود را تایپ کنید")}}
+                                            {{form.title(class="form-control form-control-sm", placeholder="نظر خود را
+                                            تایپ کنید")}}
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-danger">ارسال</button>
                                             </div>
@@ -101,54 +111,61 @@
                     <div class="card-body">
                         <div class="tab-pane">
                             {% for comment in news.comments %}
-                            <div class="post" style="border-right: 2px solid #c82333;padding-right:5px;margin-top:5px">
-                                <div class="user-block">
-                                    <img style="border-color: #c82333;" class="img-circle img-bordered-sm"
-                                        src="{{url_for('static', filename=comment.writer_image(comment.user_id))}}" alt="User Image">
-                                    <span class="username">
-                                        <a href="#">{{comment.writer(comment.user_id)}}</a>
-                                        <a href="#" class="float-left btn-tool"><i class="fa fa-times"></i></a>
-                                    </span>
-                                    <span class="description"><i>ارسال شده
-                                            -</i><i>{{moment(comment.created_at).fromNow()}}</i></span>
-                                    <span class="text-danger text-sm float-left show-reply-box" style="cursor: pointer;">پاسخ</span>
-                                </div>
-                                <!-- /.user-block -->
-                                <p class="text-sm">{{comment.title}}</p>
-            
-                                <form class="form-horizontal replay-form" action="{{url_for('blog.send_reply', news_id=news.id, comment_id=comment.id)}}" 
-                                      method="post">
-                                    {{form.csrf_token}}
-                                    <div class="input-group input-group-sm mb-0">
-                                        {{form.title(class="form-control form-control-sm", placeholder="نظر خود را تایپ کنید")}}
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-warning">ارسال</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <hr>
-                                {% for reply in comment.replies %}
-                                <div class="post" style="border-right: 2px solid #ffc107;padding-right:5px">
+                                {% if comment.show %}
+                                <div class="post" style="border-right: 2px solid #c82333;padding-right:5px;margin-top:5px">
                                     <div class="user-block">
-                                        <img style="border-color: #ffc107;" class="img-circle img-bordered-sm"
-                                            src="{{url_for('static', filename=reply.writer_image(reply.user_id))}}" alt="User Image">
+                                        <img style="border-color: #c82333;" class="img-circle img-bordered-sm"
+                                            src="{{url_for('static', filename=comment.writer_image(comment.user_id))}}"
+                                            alt="User Image">
                                         <span class="username">
-                                            <a href="#">{{reply.writer(reply.user_id)}}</a>
+                                            <a href="#">{{comment.writer(comment.user_id)}}</a>
                                             <a href="#" class="float-left btn-tool"><i class="fa fa-times"></i></a>
                                         </span>
                                         <span class="description"><i>ارسال شده
-                                                -</i><i>{{moment(reply.created_at).fromNow()}}</i></span>
+                                                -</i><i>{{moment(comment.created_at).fromNow()}}</i></span>
+                                        <span class="text-danger text-sm float-left show-reply-box"
+                                            style="cursor: pointer;">پاسخ</span>
                                     </div>
                                     <!-- /.user-block -->
-                                    <p class="text-sm">{{reply.title}}</p>
+                                    <p class="text-sm">{{comment.title}}</p>
+
+                                    <form class="form-horizontal replay-form"
+                                        action="{{url_for('blog.send_reply', news_id=news.id, comment_id=comment.id)}}"
+                                        method="post">
+                                        {{form.csrf_token}}
+                                        <div class="input-group input-group-sm mb-0">
+                                            {{form.title(class="form-control form-control-sm", placeholder="نظر خود را تایپ
+                                            کنید")}}
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-warning">ارسال</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                    {% for reply in comment.replies %}
+                                        {% if reply.show %}
+                                        <div class="post" style="border-right: 2px solid #ffc107;padding-right:5px">
+                                            <div class="user-block">
+                                                <img style="border-color: #ffc107;" class="img-circle img-bordered-sm"
+                                                    src="{{url_for('static', filename=reply.writer_image(reply.user_id))}}"
+                                                    alt="User Image">
+                                                <span class="username">
+                                                    <a href="#">{{reply.writer(reply.user_id)}}</a>
+                                                    <a href="#" class="float-left btn-tool"><i class="fa fa-times"></i></a>
+                                                </span>
+                                                <span class="description"><i>ارسال شده
+                                                        -</i><i>{{moment(reply.created_at).fromNow()}}</i></span>
+                                            </div>
+                                            <!-- /.user-block -->
+                                            <p class="text-sm">{{reply.title}}</p>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
-                                {% endfor %}
-                            </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
-                    
-
                 </div>
                 {% endblock %}
             </div>

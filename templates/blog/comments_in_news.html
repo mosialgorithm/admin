@@ -24,6 +24,7 @@
                                     <th class="sorting" rowspan="1" colspan="1"> عنوان خبر</th>
                                     <th class="sorting" rowspan="1" colspan="1"> نویسنده </th>
                                     <th class="sorting" rowspan="1" colspan="1"> تاریخ ایجاد خبر </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> تاریخ ایجاد کامنت </th>
                                     <th class="sorting" rowspan="1" colspan="1">  نمایش / عدم نمایش </th>
                                     <th class="sorting" rowspan="1" colspan="1">عملیات</th>
                                 </tr>
@@ -40,6 +41,10 @@
                                     <td><img src="{{url_for('static', filename=comment.writer_image(comment.user_id))}}"
                                         class="img-circle elevation-2" width="50" height="50" alt=""
                                         data-toggle="tooltip" data-placement="top" title="{{comment.writer(comment.user_id)}}"></td>
+                                    <td class="text-sm text-secondary">
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{comment.created_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{comment.created_at.strftime('%H:%m')}}</span>
+                                    </td>
                                     <td class="text-sm text-secondary">
                                         <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{comment.created_at.strftime('%Y/%m/%d')}}</span>
                                         <span class=""><i class="fa fa-clock-o ml-1"></i>{{comment.created_at.strftime('%H:%m')}}</span>
@@ -66,6 +71,7 @@
                         </table>
                     </div>
                 </div>
+                {% if all_comments.items >= 10 %}
                 <div class="row">
                     <div class="col-sm-12 col-md-5"></div>
                     <div class="col-sm-12 col-md-7">
@@ -98,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <!-- /.card-body -->

@@ -3,13 +3,14 @@ from flask import redirect, render_template, request, url_for, session, flash
 from app import db
 from . import auth
 from .forms import RegisterForm, LoginForm, SuperUserForm
-from .models import User
+from .models import User, UserLogs
 from flask_login import login_user, logout_user, current_user
 
 
 
 @auth.route('/register', methods=['POST', 'GET'])
 def register():
+    """register user"""
     login_form = LoginForm()
     form = RegisterForm()
     if request.method == 'POST':
@@ -27,6 +28,16 @@ def register():
             try:
                 db.session.add(user)
                 db.session.commit()
+                # ========= event logging =====================
+                event = UserLogs()
+                event.save_log(user.id,register.__doc__,user)
+                # event.user_id = user.id
+                # event.title = f'{register.__doc__}'
+                # event.model_id = user.id
+                # event.model_name = f'{type(user)}'
+                # db.session.add(event)
+                # db.session.commit()
+                # ========= end of event logging ==============
                 flash('your data is registered successfully', 'success')
                 print('data is correct :)')
                 return redirect(url_for('auth.login', form=login_form))
@@ -42,6 +53,7 @@ def register():
  
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
+    """loggin user"""
     form = LoginForm()
     if request.method == 'POST':
         phone = request.form.get('phone')
@@ -59,6 +71,10 @@ def login():
         user.user_agent = request.headers.get('User-Agent')
         db.session.add(user)
         db.session.commit()
+        # ========= event logging ==============
+        event = UserLogs()
+        event.save_log(user.id,login.__doc__,user)
+        # ========= end of event logging========
         login_user(user)
         flash('you are logged in successfully', 'success')
         return redirect(url_for('admin.index'))
@@ -68,13 +84,19 @@ def login():
 
 @auth.route('/logout')
 def logout():
+    """logout user"""
     flash('your are logged out', 'danger')
+    # ========= event logging ==============
+    event = UserLogs()
+    event.save_log(current_user.id,logout.__doc__,current_user)
+    # ========= end of event logging========
     logout_user()
     return redirect(url_for('auth.login'))
     
     
 @auth.route('/createsuperuser', methods=['POST', 'GET'])
 def superuser():
+    """create superuser"""
     form = SuperUserForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -92,6 +114,10 @@ def superuser():
                 user.username = user.name + user.phone[-4:]
                 db.session.add(user)
                 db.session.commit()
+                # ========= event logging ==============
+                event = UserLogs()
+                event.save_log(current_user.id,superuser.__doc__,current_user)
+                # ========= end of event logging========
                 if current_user:
                     return redirect(url_for('auth.logout'))
                 return redirect(url_for('auth.login'))

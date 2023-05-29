@@ -8,12 +8,12 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="offset-md-3 col-md-6">
+            <div class="offset-md-2 col-md-8">
                 {% include 'flash.html' %}
             </div>
         </div>
         <div class="row">
-            <div class="offset-md-3 col-md-6">
+            <div class="offset-md-2 col-md-8">
                 {% include 'error.html' %}
             </div>
         </div>
@@ -24,11 +24,11 @@
             <!-- Main row -->
             <div class="row">
                 {% block main_content %}
-                <div class="offset-md-3 col-md-6">
-                    <div class="card card-success">
+                <div class="offset-md-2 col-md-8">
+                    <div class="card card-secondary">
 
                         <div class="card-header">
-                            <h3 class="card-title"> ویرایش خبر {{news.title}}</h3>
+                            <h3 class="card-title"> ویرایش خبر </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -41,11 +41,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>متن خبر</label>
-                                    {{form.body(class='form-control', placeholder='عنوان خبر را وارد نمایید', rows=5)}}
+                                    {{form.body(class='form-control', placeholder='عنوان خبر را وارد نمایید')}}
                                 </div>
                                 <div class="form-group">
                                     <label class="col-12"> عکس خبر</label>
-                                    <img src="{{url_for('static', filename=news.image)}}" width="700" class="mb-3" alt="">
+                                    <img src="{{url_for('static', filename=news.image)}}" width="700" class="me-auto mb-3" alt="">
                                     <label class="col-12"> تغییر عکس</label>
                                     {{form.image(class='form-control')}}
                                 </div>
@@ -56,6 +56,10 @@
                                         <label class="form-check-label">منتشر شود ؟</label>
                                         {{form.draft()}}
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label> انتخاب دسته بندی</label>
+                                    {{form.category(class='form-control')}}
                                 </div>
                                 <!-- Date range -->
                                 <div class="form-group">

@@ -1,69 +1,18 @@
 {% extends '/admin/index.html' %}
 
-{% block small_boxes %}
-<div class="row">
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-info"><i class="fa fa-users"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text"> کل خبرها </span>
-                <span class="info-box-number">{{news_all|count}} </span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-success"><i class="fa fa-user"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">  آخرین نویسنده</span>
-                <span class="info-box-number">{{news_all[-1].writer(news_all[-1].user_id)}}</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-warning"><i class="fa fa-smile-o"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">کاربران درجه یک</span>
-                <span class="info-box-number"> <small>نفر</small></span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-primary"><i class="fa fa-hand-peace-o"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">کاربران فعال</span>
-                <span class="info-box-number"><small>نفر</small></span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-
-</div>
-{% endblock %}
+{% block small_boxes %} {% endblock %}
 
 {% block main_content %}
 <div class="col-md-12 text-center">
     <div class="card">
         <div class="card-header text-center">
-            <h3 class="card-title">لیست خبرهای سایت</h3>
+            <h3 class="card-title">لیست خبرهای پیش نویس</h3>
         </div>
+        {% if all_news.items == [] %}
+        <div class="card-body">
+            <p class="text-danger"> خبری برای نمایش وجود ندارد </p>
+        </div>
+        {% else %}
         <!-- /.card-header -->
         <div class="card-body">
             <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
@@ -81,7 +30,6 @@
                                     <th class="sorting" rowspan="1" colspan="1"> تاریخ نمایش خبر </th>
                                     <th class="sorting" rowspan="1" colspan="1"> پیش نویس </th>
                                     <th class="sorting" rowspan="1" colspan="1">  تعداد بازدید </th>
-                                    <th class="sorting" rowspan="1" colspan="1"> نمایش کامنت ها </th>
                                     <th class="sorting" rowspan="1" colspan="1">عملیات</th>
                                 </tr>
                             </thead>
@@ -97,12 +45,12 @@
                                         class="img-circle elevation-2" width="50" height="50" alt=""
                                         data-toggle="tooltip" data-placement="top" title="{{news.writer(news.user_id)}}"></td>
                                     <td class="text-sm text-secondary">
-                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{JalaliDateTime(news.created_at).strftime('%Y/%m/%d')}}</span>
-                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{JalaliDateTime(news.created_at).strftime('%H:%m')}}</span>
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{news.created_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{news.created_at.strftime('%H:%m')}}</span>
                                     </td>
-                                    <td class="text-sm {% if news.published_at > today %} text-danger {% else %} text-success {% endif %}">
-                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{JalaliDateTime(news.published_at).strftime('%Y/%m/%d')}}</span>
-                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{JalaliDateTime(news.published_at).strftime('%H:%m')}}</span>
+                                    <td class="text-sm {% if news.published_at > datetime.now() %} text-success {% else %} text-danger {% endif %}">
+                                        <span class="mb-1" style="display: block;"><i class="fa fa-calendar ml-1" ></i>{{news.published_at.strftime('%Y/%m/%d')}}</span>
+                                        <span class=""><i class="fa fa-clock-o ml-1"></i>{{news.published_at.strftime('%H:%m')}}</span>
                                     </td>
                                     <td>
                                         {% if news.draft %}
@@ -114,11 +62,9 @@
                                         {% endif %}
                                     </td>
                                     <td> <span class="text-info text-lg">{{news.views}}</span></td>
-                                    <td><a href="{{url_for('blog.comments_in_news', news_id=news.id)}}" class="btn btn-sm btn-secondary"> نمایش همه </a></td>
                                     <td>
                                         <div class="btn-group">
                                             <a href="{{url_for('blog.news_edit', news_id=news.id)}}" class="btn btn-sm btn-info btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>
-                                            <a href="{{url_for('blog.news_delete', news_id=news.id)}}" class="btn btn-sm btn-warning"> <i class="fa fa-trash"></i></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -162,6 +108,7 @@
             </div>
         </div>
         <!-- /.card-body -->
+        {% endif %}
     </div>
 </div>
 

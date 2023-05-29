@@ -92,7 +92,7 @@ class News(db.Model):
     views = db.Column(db.Integer(), default=0)
     users_like = db.relationship('NewsLike', backref='news')
     comments = db.relationship('Comment', backref='news')
-    categories = db.relationship('Category', secondary=news_category, backref='news')
+    categories = db.relationship('Category', secondary=news_category, back_populates='news_all')
     
     def __repr__(self):
         return f'{self.id} --> {self.title}'
@@ -116,6 +116,7 @@ class Category(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(200), nullable=False, unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now())
+    news_all = db.relationship('News', secondary=news_category, back_populates='categories')
     
     def __repr__(self):
         return self.title

@@ -72,6 +72,12 @@
                     <p> تقویم </p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{url_for('admin.user_log')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> نمایش ریز عملیات کاربر </p>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-item has-treeview">
@@ -117,6 +123,24 @@
                   <a href="{{url_for('blog.comments_list')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p> لیست کامنت ها</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('blog.news_draft_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>خبرهای پیش نویس</p>
+                    {% if all_news_draft != [] %}
+                    <span class="badge badge-danger right mr-1">{{all_news_draft|count}}</span>
+                    {% endif %}
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('blog.comments_not_confirm')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> کامنت های تایید نشده</p>
+                    {% if comments_not_confirm != [] %}
+                    <span class="badge badge-danger right mr-1">{{comments_not_confirm|count}}</span>
+                    {% endif %}
                   </a>
                 </li>
               </ul>
