@@ -9,4 +9,4 @@ from . import quiz
 
 @quiz.route('/')
 def index():
-    return 'online quiz is started'
+    return render_template('quiz/index.html')
