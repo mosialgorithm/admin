@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %} شبکه اجتماعی {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+      {% block small_boxes %}{% endblock %}
+      {% block main_content %}
+      <div class="row">
+        {% for user in users %}
+        {% if user != current_user %}
+        <div class="col-md-3">
+          <div class="card card-widget widget-user-2 p-2">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+              <div class="widget-user-header">
+                <div class="widget-user-image">
+                  <img class="img-circle elevation-2" src="{{url_for('static', filename=user.avatar)}}" alt="User Avatar">
+                </div>
+                <!-- /.widget-user-image -->
+                <h3 class="widget-user-username">{{user.name}}</h3>
+                <h5 class="widget-user-desc">{{user.education.split("###")[1] if user.education is not none}}</h5>
+              </div>
+              <div class="card-footer p-0">
+                <ul class="nav flex-column">
+                  <li class="nav-item">
+                    <p href="#" class="nav-link text-sm">
+                      {% set skills=user.skills.split("###") if user.skills is not none %}
+                      <span>مهارت ها </span> 
+                      {% if skills %}
+                      <span class="float-left mr-1 badge bg-info p-1">{{skills[0]}}</span>
+                      <span class="float-left mr-1 badge bg-info p-1">{{skills[1]}}</span>
+                      <span class="float-left mr-1 badge bg-info p-1">{{skills[2]}}</span>
+                      <span class="float-left mr-1 badge bg-info p-1">{{skills[3]}}</span>
+                      <span class="float-left mr-1 badge bg-info p-1">{{skills[4]}}</span>
+                      {% else %}
+                      <span class="text text-danger mr-5 text-sm">تکمیل نشده است</span>
+                      {% endif %}
+                    </p>
+                  </li>
+                  <li class="nav-item">
+                    <p href="#" class="nav-link text-sm">
+                      دنبال کنند‌ه ها <span class="float-left badge bg-success p-1">{{user.user_following()|count}}</span>
+                    </p>
+                  </li>
+                  <li class="nav-item">
+                    <p href="#" class="nav-link text-sm">
+                      دنبال شونده ها <span class="float-left badge bg-danger p-1">{{user.user_followed()|count}}</span>
+                    </p>
+                  </li>
+                  <li class="nav-item mt-2 text-center">
+                    <form action="{{url_for('social.following', user_id=user.id)}}" method="post">
+                    {{follow_form.csrf_token()}}
+                    {% if user.id not in me_following %}
+                      {{follow_form.follow_btn(class='btn btn-success btn-sm' , value='دنبال کردن ')}}
+                    {% else %}
+                      {{follow_form.follow_btn(class='btn btn-danger btn-sm' , value='دنبال نکردن ')}}
+                    {% endif %}
+                    </form>
+                  </li>
+                </ul>
+              </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endblock %}
+    </div>
+  </section>
+</div>
+
+{% endblock %}

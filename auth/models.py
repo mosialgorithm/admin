@@ -6,6 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 
+
+
  
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -39,6 +41,16 @@ class User(db.Model, UserMixin):
         
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    
+    def user_following(self):
+        from social.models import Following
+        following = Following.query.filter_by(follow_from=self.id).all()
+        return [user.follow_to for user in following]
+    
+    def user_followed(self):
+        from social.models import Following
+        followed = Following.query.filter_by(follow_to=self.id).all()
+        return [user.follow_from for user in followed]
     
     
     

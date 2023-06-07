@@ -107,13 +107,19 @@ def jdt_from_pdp(strdt):
 
 
 def jdt_to_gregorian(strdt):
-    date = strdt.split(' ')[0]
-    time = strdt.split(' ')[1]
+    date = strdt.split(' ')[0] if strdt != None else ''
+    try:
+        time = strdt.split(' ')[1] if strdt != (None or '') else ''
+    except:
+        time = ''
     year = int(date.split('-')[0])
     month = int(date.split('-')[1])
     day = int(date.split('-')[2])
-    hour = int(time.split(':')[0])
-    minute = int(time.split(':')[1])
-    second = int(time.split(':')[2])
-    en_datetime = JalaliDateTime(year,month,day,hour,minute,second).to_gregorian()
+    if time != '':
+        hour = int(time.split(':')[0])
+        minute = int(time.split(':')[1])
+        second = int(time.split(':')[2])
+        en_datetime = JalaliDateTime(year,month,day,hour,minute,second).to_gregorian()
+    else:
+        en_datetime = JalaliDateTime(year,month,day).to_gregorian()
     return en_datetime

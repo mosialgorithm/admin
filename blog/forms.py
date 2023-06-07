@@ -29,3 +29,11 @@ class NewsEditForm(FlaskForm):
 class CommentForm(FlaskForm):
     title = StringField('News Comment')
     
+    
+class SerachNewsForm(FlaskForm):
+    title = StringField("Sreach By Title")
+    body = StringField("Search By Body")
+    writer = StringField("Search By Writer")
+    draft = SelectField("Search By Draft", choices=[(0,"منتشر شده"), (1,"پیش نویس") ])
+    # datetime_from = DateTimeField("Search From DateTime")
+    # datetime_to = DateTimeField("Search To DateTime")

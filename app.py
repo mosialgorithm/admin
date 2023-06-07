@@ -90,18 +90,16 @@ def index():
 from auth import auth
 from admin import admin
 from blog import blog
-
+from social import social
+from quiz import quiz
 
 
 app.register_blueprint(auth)
 app.register_blueprint(admin)
 app.register_blueprint(blog)
-# ================= END_OF_BLUEPRINTS ==========================
-
-
-
-
-
+app.register_blueprint(social)
+app.register_blueprint(quiz)
+# ==============================================================
 
 # ================================ User Handler ==========================
 from auth.models import User

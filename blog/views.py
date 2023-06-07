@@ -4,14 +4,14 @@ from flask import redirect, render_template, request, url_for, session, flash
 from app import db
 from . import blog
 from .models import News, NewsLike, Comment, Reply, Category
-from .forms import NewPostForm, NewsEditForm, CommentForm
+from .forms import NewPostForm, NewsEditForm, CommentForm, SerachNewsForm
 from flask_login import login_user, logout_user, current_user
 from utils import save_avatar, jdt_from_pdp, jdt_to_gregorian
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import func
 from collections import Counter
 from auth.models import User, UserLogs
-
+from sqlalchemy import or_ , and_
 
 
 
@@ -97,12 +97,37 @@ def news_create():
 @blog.route('news-list', methods=['POST', 'GET'])
 def news_list():
     """showing all news for superuser"""
+    today = datetime.today()
+    form = SerachNewsForm()
     page = request.args.get('page', default=1, type=int)
+    if request.method == 'POST':
+        if not form.validate_on_submit():
+            flash('your form is not validate, please try again', 'danger')
+            return redirect(url_for('blog.news_list', form=form))
+        # =======
+        dt_from = jdt_to_gregorian(request.form.get('published_at_from'))
+        dt_to = jdt_to_gregorian(request.form.get('published_at_to'))
+        title = request.form.get('title')
+        body = request.form.get('body')
+        draft = request.form.get('draft')
+        writer = request.form.get('writer')
+        # =====
+        writer_found = User.query.filter(User.name.ilike(f'%{writer}%')).first().id
+        # ========================================================================
+        title_cond = News.title.ilike(f'%{title}%')
+        body_cond = News.body.ilike(f'%{body}%')
+        # ===========================================================================
+        search_news_all = News.query.filter(and_(title_cond, body_cond)).filter(
+            dt_from < News.published_at , News.published_at < dt_to).filter_by(draft=draft).paginate(page=page, per_page=7) # or .all()
+        # ========================================================================
+        # search = News.query.filter(dt_from < News.published_at , News.published_at < dt_to).order_by(News.published_at).paginate(page=page, per_page=7)
+        # search_news = News.query.filter(dt_from < News.published_at , News.published_at < dt_to).order_by(News.published_at).all()
+        return render_template('blog/news-list.html', form=form, news_all=search_news_all, all_news=search_news_all, today=today, JalaliDateTime=JalaliDateTime)
+        
     news_all = News.query.order_by(News.created_at.desc()).all()
     all_news = News.query.order_by(News.created_at.desc()).paginate(page=page, per_page=7)
-    today = datetime.today()
     
-    return render_template('blog/news-list.html',news_all=news_all, all_news=all_news, today=today, JalaliDateTime=JalaliDateTime)
+    return render_template('blog/news-list.html', form=form, news_all=news_all, all_news=all_news, today=today, JalaliDateTime=JalaliDateTime)
 
 
 @blog.route('news-edit/<int:news_id>', methods=['POST', 'GET'])
@@ -269,6 +294,15 @@ def news_draft_list():
     
     return render_template('blog/news-draft.html', all_news=all_news, datetime=datetime)
 
+
+@blog.route('my-news')
+def my_news():
+    form = SerachNewsForm()
+    today = datetime.today()
+    page = request.args.get('page', default=1, type=int)
+    all_news = News.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=7)
+    return render_template('blog/my-news.html', all_news=all_news, form=form, JalaliDateTime=JalaliDateTime, today=today)
+
 # =============================================== Comment Function ==========================================
 @blog.route('send-comment/<int:news_id>', methods=['POST'])
 def send_comment(news_id):
@@ -419,6 +453,13 @@ def reply_show(reply_id):
     # ========= end of event logging========
     
     return redirect(request.referrer)
+
+
+@blog.route('my-comments')
+def my_comments():
+    page = request.args.get('page', default=1, type=int)
+    all_comments = Comment.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=7)
+    return render_template('blog/my-comments.html', all_comments=all_comments)
 # ===================================== End Of Comment Function ====================================
 
 # ================================== Category Function ==============================================

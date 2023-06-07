@@ -114,9 +114,21 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a href="{{url_for('blog.my_news')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>خبرهای من</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="{{url_for('blog.news_all')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>نمایش تمامی اخبار</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('blog.my_comments')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> کامنت های من</p>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -147,23 +159,23 @@
             </li>
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-edit"></i>
+                <i class="nav-icon fa fa-handshake-o"></i>
                 <p>
-                  فرم‌ها
+                  شبکه اجتماعی
                   <i class="fa fa-angle-left right"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/forms/general.html" class="nav-link">
+                  <a href="{{url_for('social.index', username=current_user.username)}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
-                    <p>اجزا عمومی</p>
+                    <p>صفحه اصلی</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/forms/advanced.html" class="nav-link">
+                  <a href="{{url_for('social.search_user')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
-                    <p>پیشرفته</p>
+                    <p>جستجوی افراد</p>
                   </a>
                 </li>
                 <li class="nav-item">
