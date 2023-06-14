@@ -1,0 +1,90 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+
+{% endblock %}
+
+{% block main_content %}
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست امتحانات طراحی شده</h3>
+        </div>
+        <!-- /.card-header -->
+        {% if all_exam.items == [] %}
+        <div class="crd-body">
+            <p class="text-warning mt-2"> هیچ فیلدی پیدا نشد </p>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="offset-md-3 col-sm-6">
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1"> عنوان امتحان</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> تاریخ برگزاری امتحان </th>
+                                    <th class="sorting" rowspan="1" colspan="1">نوع امتحان</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> نمره</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> وضعیت</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exam in all_exam %}
+                                <tr role="row" class="odd">
+                                    <td class="td-name">{{exam.exam_title()}}</td>
+                                    <td class="td-name">{{JalaliDateTime(exam.created_at).strftime('%Y/%m/%d')}}</td>
+                                    <td class="td-name">{{exam.exam_type()}}</td>
+                                    <td class="td-name {% if exam.score|int >= 12 %} text-success {% else %} text-danger {% endif %}">{{exam.score}}</td>
+                                    <td class="td-name">
+                                        {% if exam.score|int < 12 %}
+                                        <span class="badge badge-danger p-2"> مردود </span>
+                                        {% else %}
+                                        <span class="badge badge-success p-2"> قبول </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+
+<!-- Persian Data Picker -->
+<script src="{{url_for('static', filename='js/persian-date.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/persian-datepicker.min.js')}}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#published_at_from").pDatepicker({
+            
+            altField: '#published_at_from',
+            altFormat: "YYYY-MM-DD",
+            observer: true,
+            format: "YYYY-MM-DD",
+        });
+        $("#published_at_to").pDatepicker({
+            
+            altField: '#published_at_to',
+            altFormat: "YYYY-MM-DD hh:mm:ss",
+            observer: true,
+            format: "YYYY-MM-DD hh:mm:ss",
+        });
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"> {{exam.title}} </h3>
+                        </div>
+                        <form  action="{{url_for('quiz.exam_delete', exam_id=exam.id)}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body text-center">
+                                <p class="text-danger">
+                                    آیا از حذف این آزمون مطمین هستید؟
+                                </p>
+                            </div>
+                            <div class="card-footer text-center">
+                                {{form.btn(class="btn btn-danger", value="حذف")}}
+                                <a href="{{url_for('quiz.exam_list')}}" class="btn btn-success"> انصراف </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

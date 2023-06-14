@@ -23,7 +23,9 @@ class Config(object):
     CKEDITOR_PKG_TYPE = os.getenv('CKEDITOR_PKG_TYPE')
     CKEDITOR_ENABLE_CSRF = os.getenv('CKEDITOR_ENABLE_CSRF')
     CKEDITOR_SERVE_LOCAL = os.getenv('CKEDITOR_SERVE_LOCAL')
-    
+    # ====================== Session Settings =========================================
+    SESSION_PERMANENT= os.getenv('SESSION_PERMANENT')
+    SESSION_TYPE = os.getenv('SESSION_TYPE')
 
 
 

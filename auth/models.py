@@ -6,8 +6,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 
-
-
  
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -23,12 +21,14 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime(), default=datetime.now())
     last_login = db.Column(db.DateTime())
     last_ip = db.Column(db.String(150))
+    user_agent = db.Column(db.String(200))
+    deleted = db.Column(db.Boolean(), default=False)
     address = db.Column(db.String(200))
     education = db.Column(db.String(200))
     skills = db.Column(db.String(200))
     about_me = db.Column(db.Text())
-    user_agent = db.Column(db.String(200))
-    deleted = db.Column(db.Boolean(), default=False)
+    # classrooms = db.relationship('ClassRoom', secondary=students_classrooms, back_populates='users')
+    classroom = db.Column(db.Integer(), db.ForeignKey('classrooms.id'))
     
     def __init__(self):
         self.username = ''.join(secrets.choice(string.ascii_uppercase + string.ascii_lowercase) for i in range(20))
@@ -52,7 +52,24 @@ class User(db.Model, UserMixin):
         followed = Following.query.filter_by(follow_to=self.id).all()
         return [user.follow_from for user in followed]
     
-    
+    def user_type(self):
+        if self.role == 0:
+            return "برنامه نویس"
+        elif self.role == 1:
+            return "مدیر"
+        elif self.role == 2:
+            return "معاون"
+        elif self.role == 3:
+            return "معلم"
+        elif self.role == 4:
+            return "دانش آموز"
+        elif self.role == 5:
+            return "همکار"
+        
+    @classmethod
+    def students(cls):
+        return cls.query.filter_by(role=4).all()
+
     
 class UserLogs(db.Model):
     __tablename__ = 'users_logs'

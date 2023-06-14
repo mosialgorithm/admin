@@ -18,14 +18,9 @@ from flask_wtf.csrf import CSRFProtect
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
-
-
 app = Flask(__name__)
 
 app.config.from_object(Development)
-
-
-
 
 # ================= CONFIGS_OF_LOGIN_MANAGER ==========================
 login = LoginManager()
@@ -45,8 +40,6 @@ redis = Redis(app)
 ckeditor = CKEditor(app)
 
 csrf = CSRFProtect(app)
-
-
 
 # ================= SET_GLOBAL_VARIABLES ==========================
 @app.context_processor
@@ -77,13 +70,10 @@ def blog_funcs():
 #     return dict(categories=categories)
 
 
-
-
 @login_required
 @app.route('/')
 def index():
     return redirect(url_for('admin.index'))
-
 
 
 # ================= ADD_BLUEPRINTS =============================
@@ -163,6 +153,12 @@ scheduler.start()
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
 # ====================================================================================================
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">ویرایش مقطع تحصیلی </h3>
+                        </div>
+                        <form  action="{{url_for('quiz.grade_edit', grade_id=grade.id)}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نام مقطع </label>
+                                    {{form.title(class='form-control col-9', value=grade.title)}}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">ویرایش</button>
+                                <a href="{{url_for('quiz.grade_new')}}" class="btn btn-info float-left">اضافه کردن مقطع جدید</a>
+                            </div>
+                        </form>
+                        <div class="card-footer">
+                            <form action="{{url_for('quiz.grade_delete', grade_id=grade.id)}}" method="post">
+                                {{form.csrf_token()}}
+                                <button type="submit" class="btn btn-danger"> حذف </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <div class="card">
+                        <div class="card-header">  مقاطع ثبت شده </div>
+                        <div class="card-body">
+                            {% for grade in grades %}
+                            <a href="{{url_for('quiz.grade_edit', grade_id=grade.id)}}" class="badge badge-info p-2"> {{grade.title}} </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

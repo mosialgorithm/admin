@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">مشخصات دانش آموز جدید</h3>
+                        </div>
+                        <form  action="{{url_for('quiz.student_enroll')}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نام دانش آموز </label>
+                                    {{form.student_name(class='form-control col-9', placeholder='نام و نام خانوادگی')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> تلفن همراه دانش آموز </label>
+                                    {{form.student_phone(class='form-control col-9', placeholder='09131234567 ')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3">سال تحصیلی </label>
+                                    {{form.academic_year(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3">مقطع تحصیلی </label>
+                                    {{form.grade(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> رشته تحصیلی</label>
+                                    {{form.field(class='form-control col-9')}}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">ایجاد</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">تعریف رشته جدید</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form  action="{{url_for('quiz.field_new')}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نام رشته </label>
+                                    {{form.title(class='form-control col-9', placeholder='نام رشته را وارد نمایید')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نوع رشته </label>
+                                    {{form.fanny_type(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3">انتخاب سال تحصیلی</label>
+                                    {{form.grades(class='form-control col-9', default='2')}}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">ایجاد</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-3">
+                    <div class="card card-success">
+                        <div class="card-header"> رشته های ثبت شده فنی و حرفه ای </div>
+                        <div class="card-body">
+                            {% if fields_fanni != [] %}
+                                {% for field in fields_fanni %}
+                                <p>
+                                    <a href="{{url_for('quiz.field_edit', field_id=field.id)}}" 
+                                    class="badge badge-success p-2 inline-block"> {{field.title}} </a>
+                                    {% for grade in field.grades %}
+                                        <span class="text-secondary text-sm"> {{grade.title}} </span>
+                                    {% endfor %}
+                                </p>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-success text-sm"> هنوز رشته ای تعریف نشده است </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-danger">
+                        <div class="card-header"> رشته های ثبت شده کاردانش </div>
+                        <div class="card-body">
+                            {% if fields_kar != [] %}
+                                {% for field in fields_kar %}
+                                <p>
+                                    <a href="{{url_for('quiz.field_edit', field_id=field.id)}}" 
+                                    class="badge badge-danger p-2"> {{field.title}} </a>
+                                    {% for grade in field.grades %}
+                                        <span class="text-secondary text-sm"> {{grade.title}} </span>
+                                    {% endfor %}
+                                </p>
+                                {% endfor %}
+                            {% else %}
+                            <p class="text-danger text-sm"> هنوز رشته ای تعریف نشده است </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

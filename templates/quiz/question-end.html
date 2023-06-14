@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title text-center"> {{exam.title}} </h3>
+                        </div>
+                        <div class="card-body">
+                            {% for question in exam.questions %}
+                                <div class="mb-4">
+                                    <h6 class="mb-2"> <span>{{loop.index}}</span>- <span>{{question.title}}</span> </h6>
+                                    <ul style="list-style-type: none;">
+                                        <li {% if question.correct_option == 1 %} class="text-success" {% endif %}>
+                                            <span> الف) </span> <span>{{question.option_1}}</span>
+                                        </li>
+                                        <li {% if question.correct_option == 2 %} class="text-success" {% endif %}>
+                                            <span> ب) </span> <span>{{question.option_2}}</span>
+                                        </li>
+                                        <li {% if question.correct_option == 3 %} class="text-success" {% endif %}>
+                                            <span> ج) </span> <span>{{question.option_3}}</span>
+                                        </li>
+                                        <li {% if question.correct_option == 4 %} class="text-success" {% endif %}>
+                                            <span> د) </span> <span>{{question.option_4}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <form action="{{url_for('quiz.question_end', exam_id=exam.id)}}" method="post">
+                                {{form.csrf_token()}}
+                                {{form.btn(class="btn btn-info float-right" , value="تایید و ثبت امتحان")}}
+                            </form>
+                            
+                            {% if exam.questions != [] %}
+                            <a href="{{url_for('quiz.question_edit', exam_id=exam.id, question_id=exam.questions[0].id)}}"
+                                class="btn btn-warning float-left">  ویرایش </a>
+                             {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+{% endblock %}

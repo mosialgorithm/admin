@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">تعریف سال تحصیلی جدید</h3>
+                        </div>
+                        <form  action="{{url_for('quiz.academic_year_new')}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نام آزمون </label>
+                                    {{form.title(class='form-control col-9', placeholder='برای مثال : 1400-1399')}}
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-success">ایجاد</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"> نمایش سال های تحصیلی تعریف شده </h3>
+                        </div>
+                        <div class="card-body">
+                            {% for year in years %}
+                                <p>
+                                    <a class="badge badge-primary p-2" 
+                                    href="{{url_for('quiz.academic_year_edit', year_id=year.id)}}">{{year.title}}</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

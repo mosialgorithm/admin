@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">ویرایش آزمون {{exam.title}}</h3>
+                        </div>
+                        <form  action="{{url_for('quiz.exam_edit', exam_id=exam.id)}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> نام آزمون </label>
+                                    {{form.title(class='form-control col-9', value=exam.title)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> انتخاب درس مرتبط </label>
+                                    {{form.course(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> مدت زمان آزمون </label>
+                                    {{form.exam_time_long(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3">  روز آزمون </label>
+                                    <div class="input-group col-9 p-0">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        </div>
+                                        <input class="normal-example form-control pwt-datepicker-input-element"
+                                         id="exam_date" name="exam_date">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3">  ساعت آزمون </label>
+                                    {{form.exam_time_start(class='form-control col-9')}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> انتخاب نوع آزمون </label>
+                                    {{form.modular_semester(class='form-control col-9')}}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">ویرایش </button>
+                                {% if exam.questions != [] %}
+                                <a href="{{url_for('quiz.question_edit', exam_id=exam.id, question_id=exam.questions[0].id)}}" 
+                                    class="btn btn-info btn-sm float-left"> ویرایش سوالات </a>
+                                {% else %}
+                                <a href="{{url_for('quiz.question', exam_id=exam.id)}}" 
+                                    class="btn btn-warning btn-sm float-left"> افزودن سوال </a>
+                                {% endif %}
+                                <a href="{{url_for('quiz.exam_list', exam_id=exam.id)}}" 
+                                    class="btn btn-danger btn-sm float-left ml-1"> لیست تمام سوالات </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+<!-- Persian Data Picker -->
+<script src="{{url_for('static', filename='js/persian-date.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/persian-datepicker.min.js')}}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#exam_date").pDatepicker({
+            altField: '#exam_date',
+            altFormat: "YYYY-MM-DD",
+            observer: true,
+            format: "YYYY-MM-DD",
+        });
+    });
+</script>
+{% endblock %}

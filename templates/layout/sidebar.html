@@ -188,23 +188,83 @@
             </li>
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-table"></i>
+                <i class="nav-icon fa fa-graduation-cap"></i>
                 <p>
-                  جداول
+                  آزمون آنلاین
                   <i class="fa fa-angle-left right"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/tables/simple.html" class="nav-link">
+                  <a href="{{url_for('quiz.index')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
-                    <p>جداول ساده</p>
+                    <p>صفحه اصلی</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/tables/data.html" class="nav-link">
+                  <a href="{{url_for('quiz.grade_new')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
-                    <p>جداول داده</p>
+                    <p>تعریف مقطع تحصیلی جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.field_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>تعریف رشته جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.academic_year_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ایجاد سال تحصیلی جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.course_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ایجاد درس جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.classroom_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ایجاد کلاس جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.classes_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>لیست کلاس ها</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.exam_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ایجاد امتحان جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.exam_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> لیست امتحانات</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.exam_mylist')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>آزمون های من</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.exam_report_card')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>کارنامه</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.student_enroll')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>ثبت نام دانش آموز جدید</p>
                   </a>
                 </li>
               </ul>

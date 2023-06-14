@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"> آزمون {{exam.title}}</h3>
+                        </div>
+                        <form action="{{url_for('quiz.exam_test', exam_id=exam.id)}}" name="exam_test" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                {% for question in exam.questions %}
+                                <section class="exam mb-5">
+                                    <p>{{question.title}}</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="{{question.id}}" value="1" id="q{{exam.id}}{{question.id}}{{1}}">
+                                        <label class="form-check-label" for="q{{exam.id}}{{question.id}}{{1}}">{{question.option_1}} </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="{{question.id}}" value="2" id="q{{exam.id}}{{question.id}}{{2}}">
+                                        <label class="form-check-label" for="q{{exam.id}}{{question.id}}{{2}}">{{question.option_2}} </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="{{question.id}}" value="3" id="q{{exam.id}}{{question.id}}{{3}}">
+                                        <label class="form-check-label" for="q{{exam.id}}{{question.id}}{{3}}"> {{question.option_3}} </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="{{question.id}}" value="4" id="q{{exam.id}}{{question.id}}{{4}}">
+                                        <label class="form-check-label" for="q{{exam.id}}{{question.id}}{{4}}"> {{question.option_4}} </label>
+                                    </div>
+                                </section>
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer">
+                                {{form.btn(class='btn btn-primary', value='ثبت')}}
+                                <!-- <button type="submit" class="btn btn-primary">ثبت جواب </button> -->
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}
+
+<script>
+    window.onload=function(){ 
+    window.setTimeout(function() { document.exam_test.submit(); }, 10000);
+};
+</script>

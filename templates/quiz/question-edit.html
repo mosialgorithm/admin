@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title"> ویرایش سوال {{question.title}}</h3>
+                        </div>
+                        <form  action="{{url_for('quiz.question_edit', exam_id=exam_id, question_id=question.id)}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3">  عنوان سوال </label>
+                                    {{form.title(class='form-control col-9', value=question.title)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3 {% if question.correct_option==1 %} text-success {% endif %}"> گزینه اول </label>
+                                    {{form.option_1(class='form-control col-9', value=question.option_1)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3 {% if question.correct_option==2 %} text-success {% endif %}"> گزینه دوم </label>
+                                    {{form.option_2(class='form-control col-9', value=question.option_2)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3 {% if question.correct_option==3 %} text-success {% endif %}"> گزینه سوم </label>
+                                    {{form.option_3(class='form-control col-9', value=question.option_3)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3 {% if question.correct_option==4 %} text-success {% endif %}"> گزینه چهارم </label>
+                                    {{form.option_4(class='form-control col-9', value=question.option_4)}}
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> گزینه صحیح کدام است؟ </label>
+                                    {{form.correct_option(class='form-control col-9')}}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary float-right"> اعمال تغییرات </button>
+                                <a href="{{url_for('quiz.question_end', exam_id=exam_id)}}" 
+                                class="btn btn-success btn-sm float-left mr-2"> اتمام و مشاهده نتیجه </a>
+                                <a href="{{url_for('quiz.question', exam_id=exam_id)}}" 
+                                class="btn btn-info btn-sm float-left mr-2"> سوال جدید </a>
+                                <a href="{{url_for('quiz.exam_edit', exam_id=exam_id)}}" 
+                                class="btn btn-warning btn-sm float-left mr-2"> ویرایش مشخصات امتحان  </a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">سوالات مطرح شده برای این آزمون </h3>
+                        </div>
+                        <div class="card-body">
+                            {% if questions != [] %}
+                            {% for qst in questions %}
+                            <p>
+                                <a class="text text-secondary" href="{{url_for('quiz.question_edit', exam_id=exam_id, question_id=qst.id)}}">
+                                    <span>{{loop.index}}</span> - <span>{{qst.title}}</span> 
+                                    {% if qst.id == question.id %}
+                                    <span class="text-danger text-sm mr-2"> در حال ویرایش .. </span>
+                                    {% endif %}
+                                </a>
+                            </p>
+                            {% endfor %}
+                            {% else %}
+                            <p class="text-danger text-sm">هنوز سوال طراحی نشده است</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+{% endblock %}
