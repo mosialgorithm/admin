@@ -1,0 +1,102 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+
+{% endblock %}
+
+{% block main_content %}
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست دانش آموزان ثبت شده</h3>
+        </div>
+        {% if all_students.items == [] %}
+        <div class="crd-body">
+            <p class="text-warning mt-2"> هیچ فیلدی پیدا نشد </p>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1">#</th>
+                                    <th class="sorting" rowspan="1" colspan="1">نام دانش آموز</th>
+                                    <th class="sorting" rowspan="1" colspan="1">رشته تحصیلی</th>
+                                    <th class="sorting" rowspan="1" colspan="1">مقطع تحصیلی</th>
+                                    <th class="sorting" rowspan="1" colspan="1">سال تحصیلی</th>
+                                    <th class="sorting" rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in all_students.items %}
+                                {% if student != None %}
+                                <tr role="row" class="odd">
+                                    <td>{{loop.index}}</td>
+                                    <td class="td-name">{{student.student_name()}}</td>
+                                    <td class="td-name">{{student.field_title()}}</td>
+                                    <td class="td-name">{{student.grade_title()}}</td>
+                                    <td class="td-name">{{student.academic_year_title()}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="#" 
+                                                class="btn btn-sm btn-primary btn-edit" id="btn-edit">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-sm btn-danger"> 
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if all_students.item|count > 7 %}
+                <div class="row">
+                    <div class="col-sm-12 col-md-5"></div>
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                            <ul class="pagination">
+                                {% if all_students.has_prev %}
+                                <li class="paginate_button page-item previous" id="example1_previous">
+                                    <a href="{{url_for('quiz.all_students_list', page=all_students.prev_num)}}"
+                                        aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a>
+                                </li>
+                                {% endif %}
+                                {% for page_number in all_students.iter_pages() %}
+                                {% if page_number %}
+                                <li class="paginate_button page-item">
+                                    <a href="{{url_for('quiz.all_students_list', page=page_number)}}" aria-controls="example1"
+                                        data-dt-idx="1" tabindex="0" class="page-link">
+                                        {{page_number}}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% if all_students.has_next %}
+                                <li class="paginate_button page-item next" id="example1_next">
+                                    <a href="{{url_for('quiz.all_students_list', page=all_students.next_num)}}"
+                                        aria-controls="example1" data-dt-idx="7" tabindex="0" class="page-link">بعدی</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <a href="{{url_for('quiz.student_enroll')}}" class="btn btn-sm btn-danger">اضافه کردن دانش آموز جدید</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

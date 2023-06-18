@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SelectMultipleField, RadioField, TextAreaField, SubmitField
+from wtforms import StringField, SelectField, SelectMultipleField, RadioField, TextAreaField, SubmitField, FileField
 from wtforms.validators import DataRequired
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 
@@ -47,7 +48,7 @@ class QuestionForm(FlaskForm):
 class ExamForm(FlaskForm):
     title = StringField('Exam Title', validators=[DataRequired('عنوان خود را انتخاب نکرده اید')])
     course = SelectField('Exam Class Room', validators=[DataRequired()])
-    exam_time_long = SelectField('Exam Time Long', choices=[(30, '30 دقیقه'), (60, 'یک ساعت'), (90, 'یک ساعت و نیم'),
+    exam_time_long = SelectField('Exam Time Long', choices=[(1, 'یک دقیقه'), (30, '30 دقیقه'), (60, 'یک ساعت'), (90, 'یک ساعت و نیم'),
                                           (120, 'دو ساعت'), (150, 'دو ساعت و نیم'), (180, 'سه ساعت')] , validators=[DataRequired()])
     # exam_date = DateTimeLocalField('Exam Date')
     exam_time_start = SelectField('Exam Time Starting', choices=[('8','8 صبح'), ('9','9 صبح'), ('10','10 صبح'),
@@ -75,3 +76,6 @@ class EnrollForm(FlaskForm):
     field = SelectField("Student Field")
     academic_year = SelectField("Academic Year")
     
+    
+class GroupEnrollForm(FlaskForm):
+    studens_file = FileField('Group Student Enroll', validators=[FileRequired(), FileAllowed(['pdf'], 'PDF File Only!')])

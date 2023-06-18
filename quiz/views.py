@@ -1,14 +1,20 @@
 from datetime import datetime
+import os
+import pandas as pd
 from flask import redirect, render_template, request, url_for, session, flash
-from app import db
+from app import db, app
 from . import quiz
-from .models import Field, Grade, Course, ClassRoom, Exam, Question, ExamStudents, AcademicYear, EnrollStudent
-from .forms import FieldNewForm, GradeForm, CourseForm, ClassRoomForm, ExamForm, QuestionForm, ExamTestForm, AcademicYearForm, EnrollForm
+from .models import Field, Grade, Course, ClassRoom, Exam, Question, ExamStudents, AcademicYear, EnrollStudent, EnrollGroupStudents
+from .forms import FieldNewForm, GradeForm, CourseForm, ClassRoomForm, ExamForm, QuestionForm, ExamTestForm, AcademicYearForm, EnrollForm, GroupEnrollForm
 from sqlalchemy.exc import IntegrityError
 from auth.models import User
 from flask_login import current_user
 from utils import jdt_to_gregorian
 from persiantools.jdatetime import JalaliDateTime
+from werkzeug.utils import secure_filename
+
+
+
 
 
 
@@ -511,6 +517,7 @@ def exam_mylist():
     if request.method == 'POST':
         session["exam_id"] = request.form.get("exam_id")
         session["user_id"] = current_user.id
+        session["load_page"] = 0
         return redirect(url_for('quiz.exam_test'))
     
     return render_template('quiz/exam-mylist.html', all_exam=all_exam,
@@ -519,12 +526,30 @@ def exam_mylist():
 
 @quiz.route('exam-test', methods=['POST', 'GET'])
 def exam_test():
-    if session["exam_id"] == None or session["user_id"] == None:
-        return redirect(request.referrer)
-    
+    # --------------------------------------------
     form = ExamTestForm()
     exam_id = session.get("exam_id")
     exam = Exam.query.get_or_404(exam_id)
+    # --------------------------------------------
+    if session["exam_id"] == None or session["user_id"] == None:
+        return redirect(request.referrer)
+    # ============ Protect From Page Reloaded =====================
+    load_page = session["load_page"]
+    session["load_page"] = load_page + 1
+    if load_page > 0:
+        
+        session["exam_id"] = None
+        session["user_id"] = None
+        # 
+        exam_std = ExamStudents()
+        exam_std.user_id = current_user.id
+        exam_std.exam_id = exam_id
+        exam_std.score = 0
+        db.session.add(exam_std)
+        db.session.commit()
+        return redirect(url_for('quiz.exam_end'))
+    # ==============================================================
+    # 
     # ============= exam not be zer questions !! =============================
     if len(exam.questions) < 4 :
         flash('this exam is not valid, please add question to this exam', 'danger')
@@ -572,6 +597,7 @@ def exam_preview(exam_id):
     exam = Exam.query.get_or_404(exam_id)
     
     return render_template('quiz/exam-preview.html', exam=exam, form=form)
+
 
 @quiz.route('exam-end')
 def exam_end():
@@ -665,3 +691,107 @@ def student_enroll():
     
     
     return render_template('quiz/student-enroll.html', form=form)
+
+
+@quiz.route('students-group-enrolls', methods=['POST', 'GET'])
+def students_group_enrolls():
+    form = GroupEnrollForm()
+    enroll_form = EnrollForm()
+    if request.method == 'POST':
+        file = request.files.get('studens_file')
+        filename = file.filename
+        # file_secure = secure_filename(filename)
+        folder = os.path.join(app.config['UPLOAD_DIR'],'quiz', f'{current_user.id}')
+        try:
+            os.makedirs(folder)
+        except FileExistsError:
+            pass
+        filepath = os.path.join(folder, filename)
+        file.save(filepath)
+        # 
+        group_enroll = EnrollGroupStudents()
+        group_enroll.filepath = filepath
+        db.session.add(group_enroll)
+        db.session.commit()
+        # 
+        data = pd.read_excel(group_enroll.filepath)
+        # return data.to_html()
+        flash('your file is submitted successfully', 'success')
+        return redirect(url_for('quiz.student_enroll', form=enroll_form))
+    
+    return render_template('quiz/students-group-enrolls.html', form=form)
+
+
+@quiz.route('read_files/<int:file_id>', methods=['POST', 'GET'])
+def read_files(file_id):
+    file = EnrollGroupStudents.query.get_or_404(file_id)
+    # print('file path is : ', file.filepath)
+    data = pd.read_excel(file.filepath)
+    # excel_data_df = pandas.read_excel('records.xlsx', sheet_name='Employees')
+    # dataset_1=data['سال تحصیلی'].tolist()
+    # dataset_2=data['مقطع تحصیلی']
+    # dataset_3=data['رشته تحصیلی']
+    # dataset_4=data['نام دانش آموز']
+    # dataset_5=data['شماره همراه']
+    # print(dataset_1)
+    # print(dataset_2)
+    # print(dataset_3)
+    # print(dataset_4)
+    # print(dataset_5)
+    # all_students = []
+    # for row in data.itertuples():
+        # all_students.append([row[1].replace('\u200c', ''), row[2].replace('\u200c', ''), row[3].replace('\u200c', ''), row[4].replace('\u200c', ''), row[5]])
+        # all_students.append([row[1], row[2], row[3], row[4], row[5]])
+        
+    # for student in all_students:
+        # print(student[0])
+        # print(student[1])
+        # print(student[2])
+        # print(student[3])
+        # print(student[4])
+        
+        # user = User()
+        # user.name = student[3]
+        # user.phone = student[4]
+        # db.session.add(user)
+        # db.session.commit()
+        # print('user is saved')
+        # std = EnrollStudent()
+        # std.user_id = user.id
+        # std.academic_year_id = AcademicYear.query.filter_by(title=student[0]).first().id
+        # std.grade_id = Grade.query.filter_by(title=student[1]).first().id
+        # std.field_id = Field.query.filter_by(title=student[2]).first().id
+     
+        # print('academic year ----------> ', AcademicYear.query.filter_by(title=student[0]).first())
+        # grade = Grade.query.filter(Grade.title.ilike(f'%{student[1]}%')).first()
+        # field = Field.query.filter(Field.title.ilike(f'%{student[2]}%')).first()
+        # print('grade ------------------> ', grade) 
+        # print('field ------------------> ', field)
+        # print('field ------------------> ', Field.query.filter_by(title=student[2]).first())
+        # print('**************************')
+        # field_id = 0
+        # fields = Field.query.all()
+        # for field in fields:
+        #     if student[2] <= field.title or student[2] >= field.title:
+        #         field_id = field.id
+        # print('field iD is : ====> ',field_id)
+            
+        # # 
+        # db.session.add_all(std)
+        # db.session.commit()
+        # print('enroll students is complete')
+        # print('-' * 50)
+        # print('grade : ', Grade.query.filter_by(title=student[1]).first().id)
+        # print('field : ', Field.query.filter_by(title=student[2]).first().id)
+        # print('-' * 50)
+        # db.session.rollback()
+
+    return data.to_html()
+
+
+@quiz.route('students-list', methods=['POST', 'GET'])
+def all_students_list():    
+    page = request.args.get('page', default=1, type=int)
+    all_students = EnrollStudent.query.paginate(page=page, per_page=7)
+
+    return render_template('quiz/students-list.html', all_students=all_students)

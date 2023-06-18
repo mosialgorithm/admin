@@ -82,6 +82,7 @@ from admin import admin
 from blog import blog
 from social import social
 from quiz import quiz
+from clinic import clinic
 
 
 app.register_blueprint(auth)
@@ -89,6 +90,7 @@ app.register_blueprint(admin)
 app.register_blueprint(blog)
 app.register_blueprint(social)
 app.register_blueprint(quiz)
+app.register_blueprint(clinic)
 # ==============================================================
 
 # ================================ User Handler ==========================
@@ -143,8 +145,8 @@ def app_scheduler():
                 db.session.add(news)
                 db.session.commit()
                 
-        print(datetime.today().strftime("%Y-%m-%d %H:%M:%S"))
-        print('---------------- programmer : mosi ------------------------')
+        # print(datetime.today().strftime("%Y-%m-%d %H:%M:%S"))
+        # print('---------------- programmer : mosi ------------------------')
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=app_scheduler, trigger="interval", seconds=60)

@@ -5,6 +5,7 @@ import os
 class Config(object):
     # ========================================================================================
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+    MYSQL_DATABASE_CHARSET = os.getenv('MYSQL_DATABASE_CHARSET')
     # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456789@localhost/dashboard"
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
     # SQLALCHEMY_TRACK_MODIFICATIONS = "False"

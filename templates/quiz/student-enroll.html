@@ -45,11 +45,20 @@
                                     {{form.field(class='form-control col-9')}}
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">ایجاد</button>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-block btn-primary">ایجاد</button>
+                                
+                                <a href="{{url_for('quiz.students_group_enrolls')}}" class="btn btn-sm btn-info mt-5"> ساخت گروهی دانش آموزان جدید </a>
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <a href="{{url_for('quiz.academic_year_new')}}" class="btn btn-sm btn-primary"> ساخت سال تحصیلی جدید </a>
+                    <a href="{{url_for('quiz.grade_new')}}" class="btn btn-sm btn-warning"> ساخت مقطع تحصیلی جدید </a>
+                    <a href="{{url_for('quiz.field_new')}}" class="btn btn-sm btn-danger"> ساخت رشته تحصیلی جدید </a>
                 </div>
             </div>
             {% endblock %}

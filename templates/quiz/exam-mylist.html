@@ -46,7 +46,7 @@
                                     <td class="td-name text-sm"><span>{{exam.exam_time_long}}</span> <span>دقیقه </span></td>
                                     <td class="text-sm text-secondary">{{JalaliDateTime(exam.exam_date).strftime('%Y/%m/%d')}}</td>
                                     <td class="td-name text-sm">{{exam.exam_time_start}}</td>
-                                    <td class="td-name text-sm">{{exam.modular_semester}}</td>
+                                    <td class="td-name text-sm">{{exam.exam_type()}}</td>
                                     <td>
                                         {% if exam.id not in user_exams %}
                                         <form action="{{url_for('quiz.exam_mylist')}}" method="post">
@@ -132,6 +132,8 @@
         });
     });
 </script>
+
+
 
 
 {% endblock %}

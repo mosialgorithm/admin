@@ -189,8 +189,28 @@ class EnrollStudent(db.Model):
     def __repr__(self):
         return f'user : {self.user_id} in class : {self.class_id}'
     
+    def student_name(self):
+        return User.query.get_or_404(self.user_id).name
+    
+    def grade_title(self):
+        return Grade.query.get_or_404(self.grade_id).title
+    
+    def field_title(self):
+        return Field.query.get_or_404(self.field_id).title
+    
+    def academic_year_title(self):
+        return AcademicYear.query.get_or_404(self.academic_year_id).title
+    
 
 
+
+class EnrollGroupStudents(db.Model):
+    __tablename__ = 'students_group_enrolls'
+    id = db.Column(db.Integer(), primary_key=True)
+    filepath = db.Column(db.String(200))
+    
+    def __repr__(self):
+        return self.filepath
 
 
 

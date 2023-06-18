@@ -267,6 +267,29 @@
                     <p>ثبت نام دانش آموز جدید</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{url_for('quiz.all_students_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>لیست دانش آموزان</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-graduation-cap"></i>
+                <p>
+                   کلینیک پزشکی
+                  <i class="fa fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.index')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>صفحه اصلی</p>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-header">مثال‌ها</li>

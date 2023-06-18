@@ -16,6 +16,9 @@
             {% block main_content %}
             <div class="row">
                 <div class="offset-md-3 col-md-6">
+                    <p class="alert alert-danger text-center">
+                        <span>شما مجاز به reload صفحه نمی باشید در غیر اینصورت نمره آزمون شما صفر در نظر گرفته می شود</span>
+                    </p>
                     <!-- general form elements -->
                     <div class="card card-info">
                         <div class="card-header">
@@ -24,6 +27,9 @@
                         <form action="{{url_for('quiz.exam_test', exam_id=exam.id)}}" name="exam_test" method="post">
                             {{form.csrf_token()}}
                             <div class="card-body">
+                                <h6 class="text-center">
+                                    <span id='seconds-counter-2' class="badge badge-warning p-2"></span>
+                                </h6>
                                 {% for question in exam.questions %}
                                 <section class="exam mb-5">
                                     <p>{{question.title}}</p>
@@ -45,9 +51,12 @@
                                     </div>
                                 </section>
                                 {% endfor %}
+                                <h6 class="text-center">
+                                    <span id='seconds-counter' class="badge badge-warning p-2"></span>
+                                </h6>
                             </div>
-                            <div class="card-footer">
-                                {{form.btn(class='btn btn-primary', value='ثبت')}}
+                            <div class="card-footer text-center">
+                                {{form.btn(class='btn btn-primary btn-block', value='اتمام آزمون')}}
                                 <!-- <button type="submit" class="btn btn-primary">ثبت جواب </button> -->
                             </div>
                         </form>
@@ -59,11 +68,33 @@
         </div>
     </section>
 </div>
-
-{% endblock %}
-
 <script>
     window.onload=function(){ 
-    window.setTimeout(function() { document.exam_test.submit(); }, 10000);
+    window.setTimeout(function() { document.exam_test.submit(); }, {{(exam.exam_time_long) * 60000}});
 };
 </script>
+
+<script>
+var seconds = {{(exam.exam_time_long) * 60}};
+var el = document.getElementById('seconds-counter');
+var ell = document.getElementById('seconds-counter-2');
+
+function incrementSeconds() {
+    seconds -= 1;
+    el.innerHTML = "مدت زمان اتمام امتحان شما" + "<span class='text-danger mr-1 ml-1'>" + seconds +  "</span>" + "ثانیه دیگر می باشد";
+    ell.innerHTML = "مدت زمان اتمام امتحان شما" + "<span class='text-danger mr-1 ml-1'>" + seconds +  "</span>" + "ثانیه دیگر می باشد";
+}
+
+var cancel = setInterval(incrementSeconds, 1000);
+
+</script>
+<script type="text/javascript">
+const onConfirmRefresh = function (event) {
+  event.preventDefault();
+  return event.returnValue = "Are you sure you want to leave the page?";
+}
+
+window.addEventListener("beforeunload", onConfirmRefresh, { capture: true });
+</script>
+{% endblock %}
+

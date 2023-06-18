@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %} آزمون آنلاین {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="offset-md-4 col-md-4">
+                {% include 'flash.html' %}
+            </div>
+        </div>
+        <div class="container-fluid">
+            {% block small_boxes %}{% endblock %}
+            {% block main_content %}
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">مشخصات دانش آموزان جدید</h3>
+                        </div>
+                        <form  action="{{url_for('quiz.students_group_enrolls')}}" method="post" enctype="multipart/form-data">
+                            {{form.csrf_token()}}
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="" class="col-3"> فایل مورد نظر </label>
+                                    {{form.studens_file(class='form-control col-9', 
+                                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel")}}
+                                </div>
+                                <p class="text-danger text-sm">
+                                    فایل انتخابی باید pdf باشد و همچنین لیست باید به صورت سال تحصیلی - مقطع تحصیلی - رشته تحصیلی - نام دانش آموز باشد
+                                </p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-primary">ایجاد</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}
