@@ -1,38 +1,3 @@
-from app import db 
-from auth.models import User
-from datetime import datetime
-from sqlalchemy import orm
-
-
-
-
-
-
-class MedicalField(db.Model):
-    __tablename__ = 'clinic_medical_fields'
-    id = db.Column(db.Integer(), primary_key=True)
-    title = db.Column(db.String(200), nullable=False, unique=True)
-    created_at = db.Column(db.DateTime(), default=datetime.now())
-    
-    def __repr__(self):
-        return self.title
-    
-
-class Expert(db.Model):
-    __tablename__ = 'clinic_experts'
-    id = db.Column(db.Integer(), primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    medical_field_id = db.Column(db.Integer(), db.ForeignKey('clinic_medical_fields.id'))
-    created_at = db.Column(db.DateTime(), default=datetime.now())
-    
-    def __repr__(self):
-        return self.title
-    
-    def expert_field_title(self):
-        medical_field =  MedicalField.query.get_or_404(self.medical_field_id).title
-        return f'{medical_field} ({self.title})'
-
-
 doctors_schedules = db.Table('clinic_doctors_schedules', db.metadata,
     db.Column('doctor_id', db.Integer(), db.ForeignKey('clinic_doctors.id' , ondelete='cascade')),
     db.Column('schedule_id', db.Integer(), db.ForeignKey('clinic_schedules.id' , ondelete='cascade'))
@@ -87,7 +52,7 @@ class ScheduleHours(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     hour = db.Column(db.String(50))
     am_pm = db.Column(db.Boolean(), default=0)
-    doctors = db.relationship('Doctor', secondary=doctors_hours, back_populates='hours')
+    doctor_id = db.Column(db.Integer(), db.ForeignKey('clinic_doctors.id'))
     
     def __repr__(self):
         return self.hour
@@ -98,7 +63,7 @@ class ScheduleDays(db.Model):
     __tablename__ = 'clinic_schedule_days'
     id = db.Column(db.Integer(), primary_key=True)
     day = db.Column(db.String(50))
-    doctors = db.relationship('Doctor', secondary=doctors_days, back_populates='days')
+    doctor_id = db.Column(db.Integer(), db.ForeignKey('clinic_doctors.id'))
     
     def __repr__(self):
         return self.day
@@ -139,6 +104,5 @@ class Visit(db.Model):
     
     
     
-class Schedules(db.Model):
-    __tablename__ = "clinic_schedules"
-    id = db.Column(db.Integer(), primary_key=True)
+    
+    

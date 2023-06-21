@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %} تعریف رشته پزشکی جدید | کلینیک ما {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+    
+        {% block small_boxes %}{% endblock %}
+
+        {% block main_content %}
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <!-- general form elements -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">تعریف رشته پزشکی جدید</h3>
+                    </div>
+                    <form  action="{{url_for('clinic.medical_field_edit', field_id=field.id)}}" method="post">
+                        {{form.csrf_token()}}
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="" class="col-3">  عنوان </label>
+                                {{form.title(class='form-control col-9', value=field.title)}}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-warning">ویرایش</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">رشته های تعریف شده</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for fld in all_fields %}
+                            <a href="{{url_for('clinic.medical_field_edit', field_id=fld.id)}}" 
+                            class="badge {% if fld.id==field.id %} badge-warning {% else %} badge-danger {% endif %} p-2">{{fld.title}}</a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}

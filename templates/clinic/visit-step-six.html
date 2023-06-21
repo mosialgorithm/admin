@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}    نوبت ویزیت پزشک | کلینیک ما {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+        {% block small_boxes %}{% endblock %}
+        {% block main_content %}
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <div class="card card-info mt-5">
+                    <div class="card-header">
+                        <h3 class="card-title">نوبت ویزیت پزشک</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center">
+                            <span class="text-secondary ml-5">  پزشک ویزیت </span>
+                            <span class="text-success"> {{doctor_name}} </span>
+                        </p>
+                        <p class="text-center">
+                            <span class="text-secondary ml-5"> روز ویزیت </span>
+                            <span class="text-success"> {{day}} </span>
+                        </p>
+                        <p class="text-center">
+                            <span class="text-secondary ml-5">  ساعت ویزیت </span>
+                            <span class="text-success"> {{hour.hour}} </span>
+                        </p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <form action="{{url_for('clinic.visit_step_six')}}" method="post">
+                            {{form.csrf_token()}}
+                            {{form.btn(class='btn btn-success', value='تایید و ذخیره برای نوبت دهی')}}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}

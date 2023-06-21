@@ -1,0 +1,11 @@
+{% if doctor.schedules != [] %}
+{% for schedule in doctor.schedules %}
+<span class="badge badge-primary p-1">{{schedule.title}}</span>
+{% endfor %}
+<br>
+<a href="{{url_for('clinic.doctor_schedule', doctor_id=doctor.id)}}" 
+class="btn btn-sm btn-warning mt-2"> ویرایش کردن </a>
+{% else %}
+<a href="{{url_for('clinic.doctor_schedule', doctor_id=doctor.id)}}" 
+class="btn btn-sm btn-info"> اضافه کردن </a>
+{% endif %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %} تعریف رشته پزشکی جدید | کلینیک ما {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+    
+        {% block small_boxes %}{% endblock %}
+
+        {% block main_content %}
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <!-- general form elements -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">ویرایش  روز های هفته برای ویزیت</h3>
+                    </div>
+                    <form  action="{{url_for('clinic.schedule_day_edit', day_id=day.id)}}" method="post">
+                        {{form.csrf_token()}}
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="" class="col-3">  روز </label>
+                                {{form.day(class='form-control col-9', value=day.day)}}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-info">تایید و ویرایش</button>
+                            <a href="{{url_for('clinic.schedule_day_delete', day_id=day.id)}}"
+                                class="btn btn-danger mr-1"> حذف </a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card card-info">
+                    <div class="card-header">
+                        <div class="card-title">روزهای تعریف شده</div>
+                    </div>
+                    <div class="card-body">
+                        {% for dy in all_days %}
+                        <a href="{{url_for('clinic.schedule_day_edit', day_id=dy.id)}}"
+                        class="badge {% if dy.id == day.id %} badge-warning {% else %}  badge-danger {% endif %} p-2 pt-1">{{dy.day}}</a>   
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}

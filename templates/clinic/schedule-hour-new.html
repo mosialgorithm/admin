@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %} تعریف رشته پزشکی جدید | کلینیک ما {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+    
+        {% block small_boxes %}{% endblock %}
+
+        {% block main_content %}
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <!-- general form elements -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">تعریف  ساعت برای ویزیت</h3>
+                    </div>
+                    <form  action="{{url_for('clinic.schedule_hour_new')}}" method="post">
+                        {{form.csrf_token()}}
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="" class="col-3">  ساعت </label>
+                                {{form.hour(class='form-control col-9', placeholder='برای مثال : 09:20')}}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="" class="col-3">  قبل از ظهر یا بعداز ظهر</label>
+                                {{form.am_pm(class='form-control col-9',)}}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-info">ایجاد</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card card-info">
+                    <div class="card-header">
+                        <div class="card-title">ساعات معرفی شده</div>
+                    </div>
+                    <div class="card-body">
+                        {% for hour in all_hours %}
+                            {% if hour.am_pm %}
+                            <a href="{{url_for('clinic.schedule_hour_edit', hour_id=hour.id)}}" 
+                            class="badge badge-danger p-2 mt-1">
+                                {{hour.hour}}
+                            </a>
+                            
+                            {% else %}
+                            <a href="{{url_for('clinic.schedule_hour_edit', hour_id=hour.id)}}" 
+                            class="badge badge-primary p-2 mt-1">
+                                {{hour.hour}}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}

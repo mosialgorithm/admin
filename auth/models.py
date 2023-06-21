@@ -65,6 +65,13 @@ class User(db.Model, UserMixin):
             return "دانش آموز"
         elif self.role == 5:
             return "همکار"
+        elif self.role == 11:
+            return "پزشک"
+        elif self.role == 12:
+            return "منشی"
+        elif self.role == 13:
+            return "بیمار"
+        
         
     @classmethod
     def students(cls):

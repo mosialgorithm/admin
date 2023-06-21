@@ -1,0 +1,123 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+
+{% endblock %}
+
+{% block main_content %}
+
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست پزشکان   </h3>
+        </div>
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1">آواتار پزشک </th>
+                                    <th class="sorting" rowspan="1" colspan="1">نام پزشک </th>
+                                    <th class="sorting" rowspan="1" colspan="1">شماره همراه پزشک </th>
+                                    <th class="sorting" rowspan="1" colspan="1">کد نظام پزشکی</th>
+                                    <th class="sorting" rowspan="1" colspan="1">تخصص</th>
+                                    <th class="sorting" rowspan="1" colspan="1"> رشته پزشکی </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> روزهای ویزیت  </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> ساعت های ویزیت  </th>
+                                    <th class="sorting" rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doctor in all_doctors.items %}
+                                <tr role="row" class="odd">
+                                    <td><img src="{{url_for('static', filename=doctor.get_avatar())}}"
+                                        class="img-circle elevation-2" width="50" height="50" alt="{{doctor.get_name()}}"></td>
+                                    <td class="td-name">{{doctor.get_name()}}</td>
+                                    <td class="td-name">
+                                        {% if doctor.get_phone() != None %}
+                                        {{doctor.get_phone()}}
+                                        {% else %}
+                                        <span class="text-danger text-sm"> تعریف نشده </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="td-name">{{doctor.medical_system_number}}</td>
+                                    <td class="td-name">{{doctor.get_expert()}}</td>
+                                    <td class="td-name">{{doctor.get_medical_field()}}</td>
+                                    <td class="td-name">
+                                        {% for day in doctor.days %}
+                                            <span class="badge badge-info p-2 mt-1">{{day}}</span>
+                                            {% if loop.index % 5 == 0 %} <br/> {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="td-name">
+                                        {% for hour in doctor.hours %}
+                                            <span class="badge badge-info p-2 mt-1">{{hour}}</span>
+                                            {% if loop.index % 6 == 0 %} <br/> {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{url_for('clinic.doctor_edit', doctor_id=doctor.id)}}"
+                                             class="btn btn-sm btn-primary btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if all_doctors.items|count > 7 %}
+                <div class="row">
+                    <div class="col-sm-12 col-md-5"></div>
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                            <ul class="pagination">
+                                {% if all_doctors.has_prev %}
+                                <li class="paginate_button page-item previous" id="example1_previous">
+                                    <a href="{{url_for('clinic.all_doctors_list', page=all_doctors.prev_num)}}" 
+                                    aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a>
+                                </li>
+                                {% endif %}
+                                {% for page_number in all_doctors.iter_pages() %}
+                                    {% if page_number %}
+                                        <li class="paginate_button page-item">
+                                            <a href="{{url_for('clinic.all_doctors_list', page=page_number)}}"
+                                                aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">
+                                            {{page_number}}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if all_doctors.has_next %}
+                                <li class="paginate_button page-item next" id="example1_next">
+                                    <a href="{{url_for('clinic.all_doctors_list', page=all_doctors.next_num)}}"
+                                        aria-controls="example1" data-dt-idx="7" tabindex="0"
+                                        class="page-link">بعدی</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+
+{% endblock %}
+
+
+

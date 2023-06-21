@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %} تعریف رشته پزشکی جدید | کلینیک ما {% endblock %}
+
+{% block content %}
+<div class="content-wrapper mt-2">
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="offset-md-4 col-md-4">
+        {% include 'flash.html' %}
+      </div>
+    </div>
+    <div class="container-fluid">
+    
+        {% block small_boxes %}{% endblock %}
+
+        {% block main_content %}
+        <div class="row">
+            <div class="offset-md-2 col-md-8">
+                <!-- general form elements -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">تعریف پزشک جدید</h3>
+                    </div>
+                    <form  action="{{url_for('clinic.doctor_edit', doctor_id=doctor.id)}}" class="row" method="post">
+                        {{form.csrf_token()}}
+                        <div class="card-body col-4">
+                            <div class="form-group">
+                                <label for="">  نام و نام خانوادگی </label>
+                                {{form.name(class='form-control', value=doctor.get_name())}}
+                            </div>
+                        </div>
+                        <div class="card-body col-4">
+                            <div class="form-group">
+                                <label for="">  شماره تلفن همراه</label>
+                                {{form.phone(class='form-control', value=doctor.get_phone())}}
+                            </div>
+                        </div>
+                        <div class="card-body col-4">
+                            <div class="form-group">
+                                <label for="">  شماره نظام پزشکی</label>
+                                {{form.medical_system_number(class='form-control', value=doctor.medical_system_number)}}
+                            </div>
+                        </div>
+                        <div class="card-body col-6">
+                            <div class="form-group">
+                                <label for="">  رشته پزشکی</label>
+                                {{form.medical_field(class='form-control')}}
+                            </div>
+                        </div>
+                        <div class="card-body col-6">
+                            <div class="form-group">
+                                <label for="">  تخصص</label>
+                                {{form.expert(class='form-control')}}
+                            </div>
+                        </div>
+                        <div class="card-body col-6">
+                            <div class="form-group">
+                                <label for="">  روزهای حضور</label>
+                                {{form.days(class='form-control', size=6)}}
+                            </div>
+                        </div>
+                        <div class="card-body col-6">
+                            <div class="form-group">
+                                <label for="">  ساعت های حضور</label>
+                                {{form.hours(class='form-control', size=10)}}
+                            </div>
+                        </div>
+                        <div class="card-footer text-center col-12">
+                            <button type="submit" class="btn btn-info">تایید و ویرایش پزشک</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}

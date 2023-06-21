@@ -1,0 +1,73 @@
+{% extends '/admin/index.html' %}
+
+{% block small_boxes %}
+
+{% endblock %}
+
+{% block main_content %}
+
+<div class="col-md-12 text-center">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3 class="card-title">لیست ویزیت های شما    </h3>
+        </div>
+        <div class="card-body">
+            <div id="example1" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        {% if all_visits != [] %}
+                        <table id="user-edit-table" class="table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" rowspan="1" colspan="1"> نام بیمار </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> نام پزشک </th>
+                                    <th class="sorting" rowspan="1" colspan="1"> روز ویزیت </th>
+                                    <th class="sorting" rowspan="1" colspan="1">  ساعت ویزیت</th>
+                                    <th class="sorting" rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for visit in all_visits %}
+                                <tr role="row" class="odd">
+                                    <td class="td-name">{{visit.patient_name()}}</td>
+                                    <td class="td-name">{{visit.doctor_name()}}</td>
+                                    <td class="td-name">{{visit.schedule_day()}}</td>
+                                    <td class="td-name">{{visit.schedule_hour()}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="#"
+                                             class="btn btn-sm btn-info btn-edit" id="btn-edit"><i class="fa fa-edit"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <br>
+                        <a href="{{url_for('clinic.visit_step_one')}}"
+                         class="btn btn-info"> ویزیت پزشک (جدید) </a>
+                        {% else %}
+                        <p class="badge badge-warning p-3 text-center">
+                            هنوز اطلاعاتی ذخیره نشده است
+                        </p>
+                        <br>
+                        <a href="{{url_for('clinic.visit_step_one')}}"
+                         class="btn btn-info"> ویزیت پزشک (جدید) </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+
+{% endblock %}

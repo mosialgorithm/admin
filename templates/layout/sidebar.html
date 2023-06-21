@@ -277,7 +277,7 @@
             </li>
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-graduation-cap"></i>
+                <i class="nav-icon fa fa-ambulance"></i>
                 <p>
                    کلینیک پزشکی
                   <i class="fa fa-angle-left right"></i>
@@ -288,6 +288,72 @@
                   <a href="{{url_for('clinic.index')}}" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>صفحه اصلی</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.medical_field_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> تعریف رشته پزشکی</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.medical_expert_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> تعریف تخصص پزشکی</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.doctor_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> تعریف پزشک</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.all_doctors_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> لیست پزشکان</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.secretary_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> تعریف منشی جدید</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.secretary_list')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> لیست منشی ها</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.clinic_schedule')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p> تعریف برنامه کلینیک</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.schedule_day_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>اضافه کردن روزهای ویزیت</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.schedule_hour_new')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>اضافه کردن ساعات ویزیت</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.visit_step_one')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>نوبت دهی آنلاین</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url_for('clinic.my_visits')}}" class="nav-link">
+                    <i class="fa fa-circle-o nav-icon"></i>
+                    <p>لیست نوبت های من</p>
                   </a>
                 </li>
               </ul>

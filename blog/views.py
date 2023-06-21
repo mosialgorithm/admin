@@ -137,6 +137,7 @@ def news_edit(news_id):
     categories = Category.query.all()
     form.category.choices = [(cat.id, cat.title) for cat in categories]
     news = News.query.get_or_404(news_id)
+    # 
     if request.method == 'POST':
         dt = jdt_to_gregorian(request.form.get('published_at'))
         if form.validate_on_submit():
